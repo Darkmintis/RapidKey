@@ -1,0 +1,8 @@
+{
+  "extends": "@rapidkey/typescript-config/base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "files": ["vitest.d.ts"],
+  "include": ["./**/*.ts", "./**/*.spec.ts", "./setup-tests.ts"]
+}

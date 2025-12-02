@@ -1,0 +1,7 @@
+{
+  "name": "@rapidkey/oxlint-config",
+  "private": true,
+  "exports": {
+    ".": "./index.json"
+  }
+}

@@ -1,0 +1,6 @@
+Contact: mailto:contact@rapidkey.com
+Contact: message @Miodec on discord.gg/rapidkey
+Expires: 2024-06-03T21:00:00.000Z
+Preferred-Languages: en
+Canonical: https://rapidkey.com/.well-known/security.txt
+Policy: https://rapidkey.com/security-policy

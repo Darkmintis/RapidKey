@@ -17,12 +17,15 @@
   padding: 2rem;
   border: none;
   grid-template-columns: 100%;
+
   &:focus-visible {
     outline: none;
   }
+
   &::backdrop {
     background: transparent;
   }
+
   .modal {
     background: var(--bg-color);
     border-radius: var(--roundness);
@@ -37,7 +40,7 @@
     @extend .ffscroll;
     box-shadow: 0 0 0 0.2em var(--sub-alt-color);
 
-    & > .title {
+    &>.title {
       font-size: 1.5rem;
       color: var(--sub-color);
     }
@@ -64,9 +67,11 @@
 }
 
 body.darkMode {
+
   .popupWrapper,
   .modalWrapper {
     .modal .inputs {
+
       input[type="date"]::-webkit-calendar-picker-indicator,
       input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         filter: invert(1);
@@ -85,6 +90,7 @@ body.darkMode {
   .modal {
     overflow: hidden;
     max-width: 70rem;
+
     canvas {
       max-height: 200px;
     }
@@ -100,17 +106,17 @@ body.darkMode {
 #customTextModal {
   .modal {
     max-width: 1200px;
-    //   "topButtons topButtons topButtons"
-    //   "textArea textArea checkboxes"
     grid-template-areas:
       "topButtons topButtons checkboxes"
       "textArea textArea checkboxes"
       "ok ok checkboxes";
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: min-content 1fr min-content;
-
     .buttonsTop {
       grid-area: topButtons;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 1rem;
     }
 
     .textAreaWrapper {
@@ -124,7 +130,6 @@ body.darkMode {
     .button.apply {
       grid-area: ok;
     }
-
 
     .longCustomTextWarning,
     .challengeWarning {
@@ -140,28 +145,26 @@ body.darkMode {
       text-align: center;
       height: 100%;
       align-items: center;
+
       p {
         font-size: 1.25em;
         margin: 0;
       }
+
       p.small {
         font-size: 0.75em;
         color: var(--sub-color);
       }
     }
 
-    .buttonsTop {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 1rem;
-    }
-
     .savedTexts {
       display: grid;
       gap: 0.5rem;
+
       .title {
         color: var(--sub-color);
       }
+
       .buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -173,7 +176,6 @@ body.darkMode {
       align-self: start;
       background: var(--sub-alt-color);
       padding: 1rem;
-      color: var(--main-color);
       border: none;
       outline: none;
       font-size: 1rem;
@@ -191,7 +193,6 @@ body.darkMode {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
-      align-items: center;
       justify-items: left;
       height: min-content;
       font-size: 0.75rem;
@@ -201,15 +202,18 @@ body.darkMode {
         display: grid;
         align-items: center;
         width: 100%;
+
         .title {
           color: var(--sub-color);
           text-transform: lowercase;
         }
+
         .sub {
           color: var(--text-color);
           margin-top: 0.25rem;
           margin-bottom: 0.5rem;
         }
+
         .groupInputs {
           &.limitInputs {
             grid-column: 2/-1;
@@ -219,12 +223,15 @@ body.darkMode {
             align-items: center;
             width: 100%;
             gap: 1rem;
+
             input {
               width: 100%;
             }
+
             .or {
               color: var(--sub-color);
             }
+
             &.disabled {
               opacity: 0.5;
               pointer-events: none;
@@ -232,10 +239,12 @@ body.darkMode {
               user-select: none;
             }
           }
+
           .buttonGroup {
             display: flex;
             width: 100%;
             gap: 0.5rem;
+
             button {
               flex-grow: 1;
             }
@@ -260,19 +269,23 @@ body.darkMode {
     .group {
       width: 100%;
       display: grid;
+
       .title {
         color: var(--sub-color);
         text-transform: lowercase;
       }
+
       .sub {
         color: var(--text-color);
         margin-top: 0.25rem;
         margin-bottom: 0.5rem;
       }
+
       .buttonGroup {
         display: flex;
         gap: 0.5rem;
         width: 100%;
+
         button {
           flex-grow: 1;
         }
@@ -289,13 +302,16 @@ body.darkMode {
 #savedTextsModal {
   .modal {
     max-width: 500px;
+
     .list {
       display: grid;
       gap: 1rem;
+
       .savedText {
         display: grid;
         gap: 0.5rem;
         grid-template-columns: 2fr 3rem;
+
         .button .fas {
           pointer-events: none;
         }
@@ -317,10 +333,12 @@ body.darkMode {
     .listLong {
       display: grid;
       gap: 1rem;
+
       .savedLongText {
         display: grid;
         gap: 0.5rem;
         grid-template-columns: 2fr auto auto;
+
         .button .fas {
           pointer-events: none;
         }
@@ -373,6 +391,7 @@ body.darkMode {
 
     .wordFilterLanguage {
       grid-column: span 2;
+
       .title {
         width: 100%;
       }
@@ -381,6 +400,7 @@ body.darkMode {
     .group {
       display: grid;
       gap: 0.5rem;
+
       .title {
         color: var(--sub-color);
       }
@@ -416,19 +436,19 @@ body.darkMode {
   .modal {
     max-width: 800px;
     overflow: unset;
-
     display: grid;
     grid-template-areas: "warning warning warning" "spacer2 spacer2 spacer2" "ratingStats ratingStats submitButton" "spacer spacer spacer" "quote quote quote";
     grid-template-columns: auto 1fr;
-
     color: var(--text-color);
 
     .warning {
       grid-area: warning;
+
       span {
         color: var(--error-color);
       }
     }
+
     .spacer,
     .spacer2 {
       grid-area: spacer;
@@ -447,6 +467,7 @@ body.darkMode {
       font-size: 2rem;
       grid-area: submitButton;
       color: var(--sub-color);
+
       &:hover {
         color: var(--text-color);
       }
@@ -462,9 +483,11 @@ body.darkMode {
       grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
       grid-area: ratingStats;
+
       .top {
         font-size: 1rem;
       }
+
       .val {
         font-size: 2.25rem;
       }
@@ -478,15 +501,19 @@ body.darkMode {
         "text text text"
         "id length source";
       grid-template-columns: 1fr 1fr 3fr;
+
       .text {
         grid-area: text;
       }
+
       .id {
         grid-area: id;
       }
+
       .length {
         grid-area: length;
       }
+
       .source {
         grid-area: source;
       }
@@ -500,17 +527,21 @@ body.darkMode {
       justify-content: flex-start;
       align-items: center;
       cursor: pointer;
+
       button.star {
         padding: 0;
         background: none;
         color: var(--sub-color);
+
         &:hover.active {
           color: var(--text-color);
         }
       }
+
       i {
         pointer-events: none;
       }
+
       .star.active {
         color: var(--main-color);
       }
@@ -537,11 +568,13 @@ body.darkMode {
       color: var(--text-color);
     }
   }
+
   & [data-popup-id="viewApeKey"] {
     textarea:disabled {
       opacity: 1;
     }
   }
+
   & [data-popup-id="devGenerateData"] {
     max-width: 700px;
   }
@@ -561,6 +594,7 @@ body.darkMode {
 #customWordAmountModal {
   .modal {
     max-width: 500px;
+
     .tip {
       font-size: 0.75rem;
       color: var(--text-color);
@@ -571,6 +605,7 @@ body.darkMode {
 #customTestDurationModal {
   .modal {
     max-width: 500px;
+
     .tip,
     .preview {
       font-size: 0.75rem;
@@ -583,6 +618,7 @@ body.darkMode {
   .modal {
     max-width: 425px;
     overflow: unset;
+
     .captcha {
       display: flex;
       justify-content: center;
@@ -603,29 +639,35 @@ body.darkMode {
       display: flex;
       flex-direction: row-reverse;
       gap: 0.5rem;
+
       button {
         flex-grow: 1;
       }
     }
+
     .result {
       display: grid;
       gap: 0.5rem;
       grid-template-columns: 1fr 1fr;
     }
+
     .divider {
       background: var(--sub-alt-color);
       width: 100%;
       height: 0.25rem;
       border-radius: var(--roundness);
     }
+
     .group {
       .sub {
         font-size: 0.75em;
         color: var(--sub-color);
       }
+
       &.testType {
         grid-column: 1;
       }
+
       &.wpm,
       &.acc {
         font-size: 2em;
@@ -643,18 +685,22 @@ body.darkMode {
 #shareTestSettingsModal {
   .modal {
     max-width: 600px;
+
     .subgroup {
       padding-left: 2rem;
     }
+
     .tooLongWarning {
       font-size: 0.75rem;
       color: var(--error-color);
     }
   }
 }
+
 #cookiesModal {
   align-items: end;
   justify-items: end;
+
   .extensionMessage {
     max-width: 465px;
     width: 100%;
@@ -664,6 +710,7 @@ body.darkMode {
     grid-row: 1/2;
     padding: 1rem;
   }
+
   .modal {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -671,24 +718,30 @@ body.darkMode {
     z-index: 100000001;
     -webkit-user-select: none;
     user-select: none;
+
     .main {
       display: grid;
       gap: 1rem;
     }
+
     .buttons {
       margin-top: 0.25rem;
       display: grid;
       gap: 1rem;
     }
+
     .title {
       color: var(--sub-color);
     }
+
     .description {
       color: var(--text-color);
     }
+
     .settings {
       display: grid;
       gap: 1rem;
+
       .cookie label {
         display: grid;
         gap: 0 1rem;
@@ -696,27 +749,33 @@ body.darkMode {
         grid-template-areas:
           "title check"
           "description check";
+
         .title {
           grid-area: title;
           font-size: 1.25rem;
         }
+
         .description {
           grid-area: description;
         }
+
         input[type="checkbox"] {
           align-self: center;
           grid-area: check;
           font-size: 2em;
         }
       }
+
       .cookie.ads label {
         grid-template-columns: 1fr;
         grid-template-areas:
           "title"
           "description";
+
         a {
           margin-top: 0.25rem;
         }
+
         .textButton {
           padding: 0;
           padding-top: 0.25em;
@@ -731,6 +790,7 @@ body.darkMode {
 #videoAdPopupWrapper {
   display: flex;
   padding: 2rem;
+
   #videoAdPopup {
     background: var(--bg-color);
     border-radius: var(--roundness);
@@ -742,6 +802,7 @@ body.darkMode {
     aspect-ratio: 16/9;
     display: grid;
     grid-template-areas: "middle";
+
     .preloader {
       grid-area: middle;
       display: grid;
@@ -752,6 +813,7 @@ body.darkMode {
       height: max-content;
       align-self: center;
     }
+
     .video {
       grid-area: middle;
     }
@@ -762,6 +824,7 @@ body.darkMode {
   .modal {
     max-width: 100%;
     overflow-y: scroll;
+
     table {
       border-spacing: 0;
       border-collapse: collapse;
@@ -783,24 +846,30 @@ body.darkMode {
       td.infoIcons span {
         margin: 0 0.1rem;
       }
+
       .miniResultChartButton {
         opacity: 0.25;
         transition: 0.25s;
         cursor: pointer;
+
         &:hover {
           opacity: 1;
         }
       }
+
       .sub {
         opacity: 0.5;
       }
+
       td {
         text-align: right;
       }
+
       td:nth-child(6),
       td:nth-child(7) {
         text-align: center;
       }
+
       tbody td:nth-child(1) {
         font-size: 1.5rem;
       }
@@ -836,6 +905,7 @@ body.darkMode {
       .buttons {
         display: grid;
         gap: 0.5rem;
+
         button {
           width: 180px;
         }
@@ -908,21 +978,25 @@ body.darkMode {
           overflow: visible;
           color: var(--text-color);
         }
+
         .id {
           grid-area: id;
           font-size: 0.8rem;
           color: var(--sub-color);
         }
+
         .length {
           grid-area: len;
           font-size: 0.8rem;
           color: var(--sub-color);
         }
+
         .source {
           grid-area: source;
           font-size: 0.8rem;
           color: var(--sub-color);
         }
+
         .resultChevron {
           grid-area: chevron;
           display: flex;
@@ -931,26 +1005,32 @@ body.darkMode {
           color: var(--sub-color);
           font-size: 2rem;
         }
+
         .report {
           grid-area: report;
           color: var(--sub-color);
           transition: 0.25s;
+
           &:hover {
             color: var(--text-color);
           }
         }
+
         .favorite {
           grid-area: favorite;
           color: var(--sub-color);
           transition: 0.25s;
+
           &:hover {
             color: var(--text-color);
           }
         }
+
         .sub {
           opacity: 0.5;
         }
       }
+
       .searchResult:hover {
         background: var(--sub-alt-color);
         border-radius: 5px;
@@ -983,20 +1063,22 @@ body.darkMode {
     }
   }
 }
+
 #apeKeysModal {
   .modal {
     max-width: 1000px;
-
     grid-template-rows: max-content auto;
     align-items: baseline;
 
     .top {
       display: grid;
       grid-template-columns: 1fr auto;
+
       .title {
         font-size: 1.5rem;
         color: var(--sub-color);
       }
+
       button {
         padding: 0.5em 2em;
       }
@@ -1010,6 +1092,7 @@ body.darkMode {
       display: grid;
       grid-auto-flow: column;
       gap: 1rem;
+
       .button {
         width: 3rem;
       }
@@ -1072,6 +1155,7 @@ body.darkMode {
         td:first-child {
           padding-left: 1rem;
         }
+
         td:last-child {
           padding-right: 1rem;
         }
@@ -1090,10 +1174,12 @@ body.darkMode {
     .top {
       display: flex;
       justify-content: space-between;
+
       .title {
         font-size: 1.5rem;
         color: var(--sub-color);
       }
+
       button {
         padding: 0.5em 1em;
       }
@@ -1130,11 +1216,13 @@ body.darkMode {
           resize: vertical;
           min-height: 5rem;
         }
+
         .source {
           grid-column: 1/2;
           grid-row: 2/3;
           color: var(--text-color);
         }
+
         .buttons {
           display: flex;
           flex-direction: column;
@@ -1151,9 +1239,11 @@ body.darkMode {
           color: var(--sub-color);
           flex-wrap: wrap;
           gap: 1rem;
+
           .length.red {
             color: var(--error-color);
           }
+
           i.fas {
             margin-right: 0.5em;
           }
@@ -1163,6 +1253,7 @@ body.darkMode {
           opacity: 0.5;
         }
       }
+
       .searchResult:hover {
         background: var(--sub-alt-color);
         border-radius: 5px;
@@ -1183,7 +1274,6 @@ body.darkMode {
     .red {
       color: var(--error-color);
     }
-
 
     .quote {
       font-size: 1.5rem;
@@ -1208,7 +1298,6 @@ body.darkMode {
       margin-bottom: -0.5rem;
     }
 
-
     .user {
       font-size: 1.5rem;
     }
@@ -1226,6 +1315,7 @@ body.darkMode {
 #editResultTagsModal {
   .modal {
     max-width: 600px;
+
     .buttons {
       display: grid;
       gap: 0.5rem;
@@ -1337,12 +1427,15 @@ body.darkMode {
         display: grid;
         gap: 1rem;
         text-decoration: none;
+
         .text {
           transition: 0.25s;
         }
+
         &:hover .text {
           color: var(--bg-color);
         }
+
         .icon {
           font-size: 3rem;
           line-height: 3rem;
@@ -1362,7 +1455,7 @@ body.darkMode {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      
+
       i {
         color: var(--main-color);
       }
@@ -1490,6 +1583,7 @@ body.darkMode {
     }
   }
 }
+
 #shareCustomThemeModal {
   .modal {
     max-width: 400px;
@@ -1501,11 +1595,13 @@ body.darkMode {
     }
   }
 }
+
 #shareCustomThemeUrlModal {
   .modal {
     max-width: 900px;
   }
 }
+
 #contactModal {
   .modal {
     overflow-y: scroll;
@@ -1516,6 +1612,7 @@ body.darkMode {
 
     .text {
       color: var(--text-color);
+
       span {
         color: var(--error-color);
       }
@@ -1534,17 +1631,21 @@ body.darkMode {
         grid-template-columns: auto 1fr;
         text-align: left;
         align-items: center;
+
         .textGroup {
           grid-area: textgroup;
         }
+
         .text {
           font-size: 1.5rem;
           line-height: 2rem;
           transition: 0.125s;
         }
+
         &:hover .text {
           color: var(--bg-color);
         }
+
         .icon {
           grid-area: icon;
           font-size: 2rem;
@@ -1559,6 +1660,7 @@ body.darkMode {
   .modal {
     max-width: 450px;
     gap: 1rem;
+
     .presetNameTitle {
       font-size: 0.75rem;
       color: var(--sub-color);
@@ -1582,33 +1684,40 @@ body.darkMode {
     grid-template-columns: 1fr;
     gap: 1rem;
     font-size: 0.75rem;
+
     .title {
       color: var(--sub-color);
       text-transform: lowercase;
     }
+
     .partialPresetGroups {
       .checkboxList {
         display: grid;
         gap: 1rem;
         grid-template-columns: 1fr 1fr;
+
         .title {
           color: var(--text-color);
           text-transform: lowercase;
         }
+
         .checkboxTitlePair {
           display: flex;
           gap: 0.5rem;
+
           button {
             flex-grow: 1;
           }
         }
       }
     }
+
     .presetType {
       .presetTypeButtonGroup {
         display: flex;
         width: 100%;
         gap: 0.5rem;
+
         button {
           flex-grow: 1;
         }
@@ -1620,20 +1729,25 @@ body.darkMode {
 #streakHourOffsetModal {
   .modal {
     max-width: 500px;
+
     .red {
       color: var(--error-color);
     }
+
     .preview {
-      & > div:first-child {
+      &>div:first-child {
         margin-bottom: 1rem;
       }
+
       .row {
         display: flex;
         gap: 1rem;
       }
+
       div:first-child {
         flex-grow: 1;
       }
+
       div:last-child {
         align-self: center;
       }
@@ -1651,17 +1765,21 @@ body.darkMode {
   .modal {
     max-width: 600px;
     max-height: 100%;
+
     label {
       color: var(--sub-color);
       margin-bottom: 0.25em;
       display: block;
     }
+
     input:not([type="checkbox"]) {
       width: 100%;
     }
+
     input[type="checkbox"] {
       vertical-align: text-bottom;
     }
+
     textarea {
       resize: vertical;
       width: 100%;
@@ -1675,7 +1793,7 @@ body.darkMode {
       display: flex;
     }
 
-    .socialURL > p {
+    .socialURL>p {
       margin-block: 0.5rem;
       margin-inline-end: 0.5rem;
     }
@@ -1713,6 +1831,7 @@ body.darkMode {
   z-index: 99999999;
   overflow-x: hidden;
   justify-items: end;
+
   .modal {
     background: var(--bg-color);
     max-width: calc(350px + 2rem);
@@ -1747,28 +1866,33 @@ body.darkMode {
       height: 100%;
       grid-auto-columns: 100%;
     }
-    .accountAlerts > .title,
-    .notificationHistory > .title,
-    .psas > .title {
+
+    .accountAlerts>.title,
+    .notificationHistory>.title,
+    .psas>.title {
       font-size: 1.25rem;
       margin-bottom: 1rem;
       color: var(--sub-color);
       -webkit-user-select: none;
       user-select: none;
     }
-    .accountAlerts > .claimAll,
-    .accountAlerts > .deleteAll {
+
+    .accountAlerts>.claimAll,
+    .accountAlerts>.deleteAll {
       font-size: 0.75em;
       margin-bottom: 1rem;
       width: 100%;
+
       .fas {
         margin-right: 0.25em;
       }
     }
+
     .list {
       display: grid;
       gap: 1rem;
       grid-template-columns: 100%;
+
       .nothing {
         width: 100%;
         color: var(--text-color);
@@ -1776,6 +1900,7 @@ body.darkMode {
         text-align: center;
         margin: 2rem 0;
       }
+
       .preloader {
         width: 100%;
         color: var(--main-color);
@@ -1783,11 +1908,13 @@ body.darkMode {
         font-size: 1rem;
         margin: 2rem 0;
       }
+
       .item {
         display: grid;
         grid-template-areas: "indicator title buttons" "indicator body buttons";
         grid-template-columns: 0.25rem auto max-content;
         gap: 0.25rem 0.5rem;
+
         .indicator {
           grid-area: indicator;
           background-color: var(--sub-alt-color);
@@ -1795,21 +1922,26 @@ body.darkMode {
           height: 100%;
           border-radius: calc(var(--roundness) / 2);
           transition: 0.125s;
+
           &.main {
             background-color: var(--main-color);
           }
+
           &.error {
             background-color: var(--error-color);
           }
+
           &.sub {
             background-color: var(--sub-color);
           }
         }
+
         .title {
           grid-area: title;
           font-size: 0.75rem;
           color: var(--sub-color);
         }
+
         .body {
           grid-area: body;
           font-size: 0.75rem;
@@ -1818,6 +1950,7 @@ body.darkMode {
           opacity: 1;
           word-wrap: break-word;
         }
+
         .buttons {
           grid-area: buttons;
           width: 100%;
@@ -1828,54 +1961,66 @@ body.darkMode {
           transition: 0.125s;
           align-items: center;
           align-content: center;
+
           button {
             font-size: 0.8em;
             height: 100%;
             display: grid;
           }
         }
+
         &:hover,
         &:focus-within {
           .buttons {
             opacity: 1;
           }
+
           .body {
             opacity: 1;
           }
         }
       }
     }
+
     .psas .list .item {
       grid-template-areas: "indicator body";
       grid-template-columns: 0.25rem calc(100% - 0.25rem);
+
       .body {
         opacity: 1;
       }
     }
+
     .notificationHistory .list .item {
       grid-template-areas: "indicator title" "indicator body";
       grid-template-columns: 0.25rem calc(100% - 0.25rem);
+
       .title {
         font-size: 0.75rem;
         color: var(--sub-color);
       }
+
       .body {
         opacity: 1;
       }
     }
+
     .accountAlerts {
       .title {
         display: grid;
         grid-template-columns: 1fr auto;
       }
+
       .list .item {
         grid-template-areas: "indicator timestamp buttons" "indicator title buttons" "indicator body buttons";
+
         .timestamp {
           grid-area: timestamp;
           font-size: 0.6rem;
           color: var(--sub-color);
           opacity: 0.5;
         }
+
         .rewards {
           overflow: hidden;
           margin-top: 0.35rem;

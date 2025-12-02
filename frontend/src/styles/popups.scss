@@ -100,10 +100,8 @@ body.darkMode {
 #customTextModal {
   .modal {
     max-width: 1200px;
-    // grid-template-areas:
     //   "topButtons topButtons topButtons"
     //   "textArea textArea checkboxes"
-    //   "ok ok ok";
     grid-template-areas:
       "topButtons topButtons checkboxes"
       "textArea textArea checkboxes"
@@ -127,24 +125,9 @@ body.darkMode {
       grid-area: ok;
     }
 
-    // .replaceNewLinesButtons {
-    //   display: grid;
-    //   justify-content: center;
-    //   width: 100%;
-    //   font-size: 0.75rem;
-    //   grid-template-columns: 1fr;
-    //   padding: 0 1rem;
-    //   &.disabled {
-    //     opacity: 0.5;
-    //     pointer-events: none;
-    //     -webkit-user-select: none;
-    //     user-select: none;
-    //   }
-    // }
 
     .longCustomTextWarning,
     .challengeWarning {
-      // background: rgba(0, 0, 0, 0.5);
       background: var(--sub-alt-color);
       position: absolute;
       left: 0;
@@ -169,7 +152,6 @@ body.darkMode {
 
     .buttonsTop {
       display: grid;
-      // grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
       grid-template-columns: 1fr 1fr 1fr 1fr;
       gap: 1rem;
     }
@@ -212,13 +194,11 @@ body.darkMode {
       align-items: center;
       justify-items: left;
       height: min-content;
-      // margin: 1rem 0;
       font-size: 0.75rem;
       align-items: start;
 
       .group {
         display: grid;
-        // gap: 0.5rem;
         align-items: center;
         width: 100%;
         .title {
@@ -226,9 +206,6 @@ body.darkMode {
           text-transform: lowercase;
         }
         .sub {
-          // font-size: 0.75em;
-          // height: 0;
-          // overflow: hidden;
           color: var(--text-color);
           margin-top: 0.25rem;
           margin-bottom: 0.5rem;
@@ -262,16 +239,6 @@ body.darkMode {
             button {
               flex-grow: 1;
             }
-            // button {
-            //   flex-grow: 1;
-            //   border-radius: 0;
-            // }
-            // button:first-child {
-            //   border-radius: var(--roundness) 0 0 var(--roundness);
-            // }
-            // button:last-child {
-            //   border-radius: 0 var(--roundness) var(--roundness) 0;
-            // }
           }
         }
       }
@@ -547,9 +514,6 @@ body.darkMode {
       .star.active {
         color: var(--main-color);
       }
-      // &:hover .star.active {
-      //   color: var(--text-color);
-      // }
     }
   }
 }
@@ -623,43 +587,11 @@ body.darkMode {
       display: flex;
       justify-content: center;
     }
-    // .inputAndIndicator {
-    //   input {
-    //     width: 100%;
-    //   }
-    //   position: relative;
-    //   .checkStatus {
-    //     width: 2.25rem;
-    //     height: 2.25rem;
-    //     position: absolute;
-    //     right: 0;
-    //     top: 0;
-    //     /* background: red; */
-    //     display: grid;
-    //     grid-template-columns: 2.25rem;
-    //     grid-template-rows: 2.25rem;
-    //     place-items: center center;
-    //     cursor: pointer;
 
     //     .checking,
     //     .available,
     //     .unavailable,
-    //     .taken {
-    //       grid-column: 1/2;
-    //       grid-row: 1/2;
-    //     }
-    //     .checking {
-    //       color: var(--sub-color);
-    //     }
-    //     .available {
-    //       color: var(--main-color);
-    //     }
     //     .unavailable,
-    //     .taken {
-    //       color: var(--error-color);
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -737,7 +669,6 @@ body.darkMode {
     grid-row: 1/2;
     max-width: 465px;
     z-index: 100000001;
-    // outline: 0.5rem solid var(--bg-color)
     -webkit-user-select: none;
     user-select: none;
     .main {
@@ -1096,7 +1027,6 @@ body.darkMode {
       tr.me {
         td {
           color: var(--main-color);
-          // font-weight: 900;
         }
       }
 
@@ -1254,9 +1184,6 @@ body.darkMode {
       color: var(--error-color);
     }
 
-    // .text {
-    //   // color: var(--sub-color);
-    // }
 
     .quote {
       font-size: 1.5rem;
@@ -1281,9 +1208,6 @@ body.darkMode {
       margin-bottom: -0.5rem;
     }
 
-    // .text {
-    //   // color: var(--sub-color);
-    // }
 
     .user {
       font-size: 1.5rem;
@@ -1382,7 +1306,6 @@ body.darkMode {
   .modal {
     max-width: 900px;
     width: 100%;
-    // height: 400px;
     overflow-y: scroll;
     max-height: 100%;
     background: var(--bg-color);
@@ -1794,12 +1717,9 @@ body.darkMode {
     background: var(--bg-color);
     max-width: calc(350px + 2rem);
     right: 0;
-    // height: calc(100vh - 4rem);
     height: 100%;
     top: 0;
     padding: 2rem calc(1rem - 7px) 2rem 1rem; // -7px for the scrollbar
-    // padding: 1rem;
-    // border-radius: var(--roundness);
     overflow: hidden;
     margin-right: -10rem;
     border-radius: var(--roundness) 0 0 var(--roundness);

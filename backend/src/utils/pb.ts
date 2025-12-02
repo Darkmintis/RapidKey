@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { Mode, PersonalBest, PersonalBests } from "@rapidkey/schemas/shared";
 import { Result as ResultType } from "@rapidkey/schemas/results";
-import { getFunbox } from "@rapidkey/funbox";
 
 export type LbPersonalBests = {
   time: Record<number, Record<string, PersonalBest>>;
@@ -16,9 +15,8 @@ type CheckAndUpdatePbResult = {
 type Result = Omit<ResultType<Mode>, "_id" | "name">;
 
 export function canFunboxGetPb(result: Result): boolean {
-  if (result.funbox === undefined || result.funbox.length === 0) return true;
-
-  return getFunbox(result.funbox).every((f) => f.canGetPb);
+  // Since funbox is removed, all results can get personal bests
+  return true;
 }
 
 export function checkAndUpdatePb(

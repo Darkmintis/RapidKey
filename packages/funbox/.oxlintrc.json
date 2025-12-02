@@ -1,6 +1,0 @@
-{
-  "extends": [
-    "../oxlint-config/index.jsonc"
-    // "@rapidkey/oxlint-config"
-  ]
-}

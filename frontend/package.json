@@ -79,7 +79,6 @@
   "dependencies": {
     "@date-fns/utc": "1.2.0",
     "@rapidkey/contracts": "workspace:*",
-    "@rapidkey/funbox": "workspace:*",
     "@rapidkey/util": "workspace:*",
     "@sentry/browser": "9.14.0",
     "@sentry/vite-plugin": "3.3.1",

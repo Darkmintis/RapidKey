@@ -61,7 +61,6 @@ export const BASE_CONFIGURATION: Configuration = {
     },
     xp: {
       enabled: false,
-      funboxBonus: 0,
       gainMultiplier: 0,
       maxDailyBonus: 0,
       minDailyBonus: 0,
@@ -325,10 +324,6 @@ export const CONFIGURATION_FORM_SCHEMA: ObjectSchema<Configuration> = {
             gainMultiplier: {
               type: "number",
               label: "Gain Multiplier",
-            },
-            funboxBonus: {
-              type: "number",
-              label: "Funbox Bonus",
             },
             maxDailyBonus: {
               type: "number",

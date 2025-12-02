@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FunboxNameSchema, PartialConfigSchema } from "./configs";
+import { PartialConfigSchema } from "./configs";
 
 const MinRequiredNumber = z.object({ min: z.number() }).strict();
 const MaxRequiredNumber = z.object({ max: z.number() }).strict();
@@ -16,7 +16,6 @@ export const ChallengeSchema = z
       "customText",
       "script",
       "accuracy",
-      "funbox",
     ]),
     message: z.string().optional(),
     parameters: z.array(
@@ -25,7 +24,6 @@ export const ChallengeSchema = z
         .or(z.null())
         .or(z.number())
         .or(z.boolean())
-        .or(z.array(FunboxNameSchema))
     ),
     requirements: z
       .object({
@@ -33,11 +31,6 @@ export const ChallengeSchema = z
         acc: ExactRequiredNumber.or(MinRequiredNumber),
         afk: MaxRequiredNumber,
         time: MinRequiredNumber,
-        funbox: z
-          .object({
-            exact: z.array(FunboxNameSchema),
-          })
-          .partial(),
         raw: ExactRequiredNumber,
         con: ExactRequiredNumber,
         config: PartialConfigSchema,

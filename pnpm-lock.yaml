@@ -59,9 +59,6 @@ importers:
       '@rapidkey/contracts':
         specifier: workspace:*
         version: link:../packages/contracts
-      '@rapidkey/funbox':
-        specifier: workspace:*
-        version: link:../packages/funbox
       '@rapidkey/util':
         specifier: workspace:*
         version: link:../packages/util
@@ -273,9 +270,6 @@ importers:
       '@rapidkey/contracts':
         specifier: workspace:*
         version: link:../packages/contracts
-      '@rapidkey/funbox':
-        specifier: workspace:*
-        version: link:../packages/funbox
       '@rapidkey/util':
         specifier: workspace:*
         version: link:../packages/util
@@ -563,43 +557,6 @@ importers:
       eslint-plugin-require-path-exists:
         specifier: 1.1.9
         version: 1.1.9
-
-  packages/funbox:
-    dependencies:
-      '@rapidkey/util':
-        specifier: workspace:*
-        version: link:../util
-    devDependencies:
-      '@rapidkey/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@rapidkey/schemas':
-        specifier: workspace:*
-        version: link:../schemas
-      '@rapidkey/tsup-config':
-        specifier: workspace:*
-        version: link:../tsup-config
-      '@rapidkey/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      eslint:
-        specifier: 8.57.1
-        version: 8.57.1
-      madge:
-        specifier: 8.0.0
-        version: 8.0.0(typescript@5.5.4)
-      oxlint:
-        specifier: 1.15.0
-        version: 1.15.0
-      tsup:
-        specifier: 8.4.0
-        version: 8.4.0(postcss@8.5.3)(tsx@4.16.2)(typescript@5.5.4)(yaml@2.5.0)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
-      vitest:
-        specifier: 3.2.4
-        version: 3.2.4(@types/node@20.14.11)(happy-dom@20.0.2)(sass@1.70.0)(terser@5.44.0)(tsx@4.16.2)(yaml@2.5.0)
 
   packages/oxlint-config: {}
 

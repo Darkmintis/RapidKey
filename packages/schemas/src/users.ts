@@ -10,7 +10,7 @@ import {
   QuoteLengthSchema,
   DifficultySchema,
 } from "./shared";
-import { CustomThemeColorsSchema, FunboxNameSchema } from "./configs";
+import { CustomThemeColorsSchema } from "./configs";
 import { doesNotContainProfanity } from "./validation/validation";
 
 const NoneFilterSchema = z.literal("none");
@@ -54,7 +54,6 @@ export const ResultFiltersSchema = z.object({
     .strict(),
   tags: z.record(IdSchema.or(NoneFilterSchema), z.boolean()),
   language: z.record(LanguageSchema, z.boolean()),
-  funbox: z.record(FunboxNameSchema.or(NoneFilterSchema), z.boolean()),
 });
 export type ResultFilters = z.infer<typeof ResultFiltersSchema>;
 

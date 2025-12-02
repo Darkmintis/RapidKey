@@ -9,7 +9,7 @@ import {
 } from "./util";
 import { LanguageSchema } from "./languages";
 import { Mode, Mode2, Mode2Schema, ModeSchema } from "./shared";
-import { DifficultySchema, FunboxSchema } from "./configs";
+import { DifficultySchema } from "./configs";
 
 export const IncompleteTestSchema = z.object({
   acc: PercentageSchema,
@@ -81,7 +81,6 @@ const ResultBaseSchema = z.object({
   bailedOut: z.boolean().optional(),
   blindMode: z.boolean().optional(),
   lazyMode: z.boolean().optional(),
-  funbox: FunboxSchema.optional(),
   language: LanguageSchema.optional(),
   difficulty: DifficultySchema.optional(),
   numbers: z.boolean().optional(),
@@ -120,7 +119,6 @@ export const CompletedEventSchema = ResultBaseSchema.required({
   bailedOut: true,
   blindMode: true,
   lazyMode: true,
-  funbox: true,
   language: true,
   difficulty: true,
   numbers: true,
@@ -151,7 +149,6 @@ export const XpBreakdownSchema = z.object({
   corrected: z.number().int().optional(),
   punctuation: z.number().int().optional(),
   numbers: z.number().int().optional(),
-  funbox: z.number().int().optional(),
   streak: z.number().int().optional(),
   incomplete: z.number().int().optional(),
   daily: z.number().int().optional(),

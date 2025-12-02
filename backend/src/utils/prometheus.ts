@@ -36,12 +36,6 @@ const resultLanguage = new Counter({
   labelNames: ["language"],
 });
 
-const resultFunbox = new Counter({
-  name: "result_funbox_total",
-  help: "Counts result funbox",
-  labelNames: ["funbox"],
-});
-
 const resultWpm = new Histogram({
   name: "result_wpm",
   help: "Result wpm",
@@ -99,7 +93,6 @@ export function incrementResult(res: CompletedEvent, isPb?: boolean): void {
     blindMode,
     lazyMode,
     difficulty,
-    funbox,
     language,
     numbers,
     punctuation,
@@ -127,10 +120,6 @@ export function incrementResult(res: CompletedEvent, isPb?: boolean): void {
 
   resultLanguage.inc({
     language: language || "english",
-  });
-
-  resultFunbox.inc({
-    funbox: (funbox ?? ["none"]).join("#"),
   });
 
   resultWpm.observe(

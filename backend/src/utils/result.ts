@@ -7,7 +7,6 @@ import {
 import { Mode } from "@rapidkey/schemas/shared";
 import { ObjectId } from "mongodb";
 import { WithObjectId } from "./misc";
-import { FunboxName } from "@rapidkey/schemas/configs";
 
 export type DBResult = WithObjectId<Result<Mode>> & {
   //legacy values
@@ -44,7 +43,6 @@ export function buildDbResult(
     language: ce.language,
     lazyMode: ce.lazyMode,
     difficulty: ce.difficulty,
-    funbox: ce.funbox,
     numbers: ce.numbers,
     punctuation: ce.punctuation,
     isPb: isPb,
@@ -59,7 +57,6 @@ export function buildDbResult(
   if (!ce.blindMode) delete res.blindMode;
   if (!ce.lazyMode) delete res.lazyMode;
   if (ce.difficulty === "normal") delete res.difficulty;
-  if (ce.funbox.length === 0) delete res.funbox;
   if (ce.language === "english") delete res.language;
   if (!ce.numbers) delete res.numbers;
   if (!ce.punctuation) delete res.punctuation;
@@ -101,18 +98,10 @@ export function replaceLegacyValues(result: DBResult): DBResult {
     }
   }
 
-  if (typeof result.funbox === "string") {
-    if (result.funbox === "none") {
-      result.funbox = [];
-    } else {
-      result.funbox = (result.funbox as string).split("#") as FunboxName[];
-    }
-  }
-
   if (
     result.chartData !== undefined &&
-    result.chartData !== "toolong" &&
-    "raw" in result.chartData
+    result.chartData !== \"toolong\" &&
+    \"raw\" in result.chartData
   ) {
     const temp = result.chartData;
     result.chartData = {

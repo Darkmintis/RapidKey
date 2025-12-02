@@ -1426,6 +1426,145 @@ body.darkMode {
         }
       }
     }
+
+    .divider {
+      height: 1px;
+      background: var(--sub-alt-color);
+      margin: 0.5rem 0;
+    }
+
+    .cryptoTitle {
+      color: var(--sub-color);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      i {
+        color: var(--main-color);
+      }
+    }
+
+    .cryptoWallets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+
+      .walletCard {
+        background: var(--sub-alt-color);
+        border-radius: var(--roundness);
+        padding: 1rem;
+        display: grid;
+        gap: 0.75rem;
+        transition: 0.25s;
+
+        &:hover {
+          background: var(--sub-color);
+        }
+
+        .walletHeader {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+
+          i {
+            font-size: 2rem;
+            color: var(--main-color);
+          }
+
+          .walletName {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .name {
+              color: var(--text-color);
+              font-weight: 600;
+              font-size: 1rem;
+            }
+
+            .symbol {
+              color: var(--sub-color);
+              font-size: 0.75rem;
+              font-weight: 500;
+            }
+
+            .network {
+              color: var(--main-color);
+              font-size: 0.65rem;
+              background: var(--bg-color);
+              padding: 0.15rem 0.4rem;
+              border-radius: calc(var(--roundness) / 2);
+              width: fit-content;
+            }
+          }
+        }
+
+        .qrCode {
+          display: flex;
+          justify-content: center;
+          padding: 0.5rem;
+          background: white;
+          border-radius: calc(var(--roundness) / 2);
+
+          img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+          }
+        }
+
+        .walletAddress {
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+
+          input {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--bg-color);
+            border: none;
+            border-radius: calc(var(--roundness) / 2);
+            color: var(--text-color);
+            font-family: monospace;
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &:focus {
+              outline: 2px solid var(--main-color);
+            }
+          }
+
+          .copyButton {
+            padding: 0.5rem 0.75rem;
+            background: var(--main-color);
+            border: none;
+            border-radius: calc(var(--roundness) / 2);
+            color: var(--bg-color);
+            cursor: pointer;
+            transition: 0.125s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+
+            &:active {
+              transform: scale(0.95);
+            }
+
+            i {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+    }
   }
 }
 #shareCustomThemeModal {

@@ -1,16 +1,12 @@
-import * as PageController from "./page-controller";
+﻿import * as PageController from "./page-controller";
 import * as TestUI from "../test/test-ui";
 import * as PageTransition from "../states/page-transition";
-import { isAuthAvailable, isAuthenticated } from "../firebase";
-import { isFunboxActive } from "../test/funbox/list";
 import * as TestState from "../test/test-state";
 import * as Notifications from "../elements/notifications";
 import { LoadingOptions } from "../pages/page";
 
 //source: https://www.youtube.com/watch?v=OstALBk-jTc
-// https://www.youtube.com/watch?v=OstALBk-jTc
 
-//this will be used in tribe
 type NavigateOptions = {
   force?: boolean;
   empty?: boolean;
@@ -32,7 +28,6 @@ function getParams(match: {
   const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
     (result) => result[1]
   );
-
   const a = keys.map((key, index) => [key, values[index]]);
   return Object.fromEntries(a) as Record<string, string>;
 }
@@ -60,18 +55,6 @@ const routes: Route[] = [
     },
   },
   {
-    path: "/verify",
-    load: async (_params, options) => {
-      await PageController.change("test", options);
-    },
-  },
-  {
-    path: "/leaderboards",
-    load: async (_params, options) => {
-      await PageController.change("leaderboards", options);
-    },
-  },
-  {
     path: "/about",
     load: async (_params, options) => {
       await PageController.change("about", options);
@@ -81,67 +64,6 @@ const routes: Route[] = [
     path: "/settings",
     load: async (_params, options) => {
       await PageController.change("settings", options);
-    },
-  },
-  {
-    path: "/login",
-    load: async (_params, options) => {
-      if (!isAuthAvailable()) {
-        await navigate("/", options);
-        return;
-      }
-      if (isAuthenticated()) {
-        await navigate("/account", options);
-        return;
-      }
-      await PageController.change("login", options);
-    },
-  },
-  {
-    path: "/account",
-    load: async (_params, options) => {
-      if (!isAuthAvailable()) {
-        await navigate("/", options);
-        return;
-      }
-      if (!isAuthenticated()) {
-        await navigate("/login", options);
-        return;
-      }
-      await PageController.change("account", options);
-    },
-  },
-  {
-    path: "/account-settings",
-    load: async (_params, options) => {
-      if (!isAuthAvailable()) {
-        await navigate("/", options);
-        return;
-      }
-      if (!isAuthenticated()) {
-        await navigate("/login", options);
-        return;
-      }
-      await PageController.change("accountSettings", options);
-    },
-  },
-  {
-    path: "/profile",
-    load: async (_params, options) => {
-      await PageController.change("profileSearch", options);
-    },
-  },
-  {
-    path: "/profile/:uidOrName",
-    load: async (params, options) => {
-      await PageController.change("profile", {
-        ...options,
-        force: true,
-        params: {
-          uidOrName: params["uidOrName"] as string,
-        },
-        data: options.data,
-      });
     },
   },
 ];
@@ -168,20 +90,9 @@ export async function navigate(
     return;
   }
 
-  const noQuit = isFunboxActive("no_quit");
-  if (TestState.isActive && noQuit) {
-    Notifications.add("No quit funbox is active. Please finish the test.", 0, {
-      important: true,
-    });
-    //todo: figure out if this was ever used
-    // event?.preventDefault();
-    return;
-  }
-
   url = url.replace(/\/$/, "");
   if (url === "") url = "/";
 
-  // only push to history if we're navigating to a different URL
   const currentUrl = new URL(window.location.href);
   const targetUrl = new URL(url, window.location.origin);
 

@@ -11,11 +11,8 @@ import AddOrRemoveThemeToFavorite from "./lists/add-or-remove-theme-to-favorites
 import TagsCommands from "./lists/tags";
 import CustomThemesListCommands from "./lists/custom-themes-list";
 import PresetsCommands from "./lists/presets";
-import FunboxCommands from "./lists/funbox";
 import ThemesCommands from "./lists/themes";
-import LoadChallengeCommands, {
-  update as updateLoadChallengeCommands,
-} from "./lists/load-challenge";
+import LoadChallengeCommands from "./lists/load-challenge";
 
 import Config, * as UpdateConfig from "../config";
 import * as Misc from "../utils/misc";
@@ -23,25 +20,12 @@ import * as JSONData from "../utils/json-data";
 import { randomizeTheme } from "../controllers/theme-controller";
 import * as CustomTextPopup from "../modals/custom-text";
 import * as Notifications from "../elements/notifications";
-import * as VideoAdPopup from "../popups/video-ad-popup";
 import * as ShareTestSettingsPopup from "../modals/share-test-settings";
 import * as TestStats from "../test/test-stats";
-import * as QuoteSearchModal from "../modals/quote-search";
 import * as FPSCounter from "../elements/fps-counter";
 import { Command, CommandsSubgroup } from "./types";
 import { buildCommandForConfigKey } from "./util";
 import { CommandlineConfigMetadataObject } from "./commandline-metadata";
-
-const challengesPromise = JSONData.getChallengeList();
-challengesPromise
-  .then((challenges) => {
-    updateLoadChallengeCommands(challenges);
-  })
-  .catch((e: unknown) => {
-    console.error(
-      Misc.createErrorMessage(e, "Failed to update challenges commands")
-    );
-  });
 
 const languageCommand = buildCommandForConfigKey("language");
 const difficultyCommand = buildCommandForConfigKey("difficulty");
@@ -81,16 +65,6 @@ export const commands: CommandsSubgroup = {
         CustomTextPopup.show();
       },
     },
-    {
-      id: "viewQuoteSearchPopup",
-      display: "Search for quotes",
-      icon: "fa-search",
-      exec: (): void => {
-        UpdateConfig.setMode("quote");
-        void QuoteSearchModal.show();
-      },
-      shouldFocusTestUI: false,
-    },
     ...QuoteFavoriteCommands,
     ...BailOutCommands,
     {
@@ -119,7 +93,6 @@ export const commands: CommandsSubgroup = {
       minAccCommand,
       ...MinBurstCommands,
       "britishEnglish",
-      ...FunboxCommands,
       "customLayoutfluid",
       "customPolyglot"
     ),
@@ -226,15 +199,6 @@ export const commands: CommandsSubgroup = {
     //other
     ...LoadChallengeCommands,
     ...NavigationCommands,
-    {
-      id: "watchVideoAd",
-      display: "Watch video ad",
-      alias: "support donate",
-      icon: "fa-ad",
-      exec: (): void => {
-        void VideoAdPopup.show();
-      },
-    },
     {
       id: "importSettingsJSON",
       display: "Import settings JSON",
@@ -357,7 +321,6 @@ const lists = {
   minWpm: minSpeedCommand.subgroup,
   minAcc: minAccCommand.subgroup,
   minBurst: MinBurstCommands[0]?.subgroup,
-  funbox: FunboxCommands[0]?.subgroup,
   confidenceMode: confidenceModeCommand.subgroup,
   stopOnError: stopOnErrorCommand.subgroup,
   layouts: layoutCommand.subgroup,
@@ -374,8 +337,6 @@ export function doesListExist(listName: string): boolean {
 export async function getList(
   listName: ListsObjectKeys
 ): Promise<CommandsSubgroup> {
-  await Promise.allSettled([challengesPromise]);
-
   const list = lists[listName];
   if (!list) {
     Notifications.add(`List not found: ${listName}`, -1);
@@ -416,7 +377,6 @@ export function getTopOfStack(): CommandsSubgroup {
 
 let singleList: CommandsSubgroup | undefined;
 export async function getSingleSubgroup(): Promise<CommandsSubgroup> {
-  await Promise.allSettled([challengesPromise]);
   const singleCommands: Command[] = [];
   for (const command of commands.list) {
     const ret = buildSingleListCommands(command);

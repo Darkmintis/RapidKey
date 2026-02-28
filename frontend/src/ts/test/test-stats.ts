@@ -6,7 +6,6 @@ import * as TestWords from "./test-words";
 import * as TestState from "./test-state";
 import * as Numbers from "@rapidkey/util/numbers";
 import { CompletedEvent, IncompleteTest } from "@rapidkey/schemas/results";
-import { isFunboxActiveWithProperty } from "./funbox/list";
 
 type CharCount = {
   spaces: number;
@@ -354,10 +353,7 @@ function countChars(): CharCount {
       spaces++;
     }
   }
-  if (isFunboxActiveWithProperty("nospace")) {
-    spaces = 0;
-    correctspaces = 0;
-  }
+  // nospace funbox removed
   return {
     spaces: spaces,
     correctWordChars: correctWordChars,

@@ -1,8 +1,5 @@
 import SlimSelect from "slim-select";
 import { DataObjectPartial } from "slim-select/store";
-import { getTestActivityCalendar } from "../db";
-import * as ServerConfiguration from "../ape/server-configuration";
-import * as DB from "../db";
 import {
   TestActivityCalendar,
   TestActivityMonth,
@@ -90,11 +87,7 @@ export function initYearSelector(
     },
   ];
   for (let year = currentYear; year >= startYear; year--) {
-    if (
-      years.length < 2 ||
-      (ServerConfiguration.get()?.users.premium.enabled &&
-        DB.getSnapshot()?.isPremium)
-    ) {
+    if (years.length < 2 || true) {
       years.push({
         text: year.toString(),
         value: year.toString(),
@@ -137,13 +130,7 @@ function getYearSelector(element: HTMLElement): SlimSelect {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         yearSelector?.disable();
         const selected = newVal[0]?.value as string;
-        const activity = await getTestActivityCalendar(selected);
-        update(element, activity);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        if ((yearSelector?.getData() ?? []).length > 1) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          yearSelector?.enable();
-        }
+        return; // getTestActivityCalendar removed
       },
     },
   });

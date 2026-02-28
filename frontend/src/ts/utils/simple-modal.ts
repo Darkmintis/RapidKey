@@ -3,7 +3,6 @@ import { Attributes, buildTag } from "./tag-builder";
 import { format as dateFormat } from "date-fns/format";
 import * as Loader from "../elements/loader";
 import * as Notifications from "../elements/notifications";
-import * as ConnectionState from "../states/connection";
 import {
   Validation,
   ValidationOptions,
@@ -403,9 +402,8 @@ export class SimpleModal {
   }
 
   show(parameters: string[] = [], showOptions: ShowOptions): void {
-    if (this.onlineOnly && !ConnectionState.get()) {
-      Notifications.add("You are offline", 0, { duration: 2 });
-      return;
+    if (this.onlineOnly) {
+      // always online — ConnectionState removed
     }
     activePopup = this;
     this.parameters = parameters;

@@ -1,6 +1,5 @@
 import * as Notifications from "../elements/notifications";
 import { isPopupVisible } from "../utils/misc";
-import * as AdController from "../controllers/ad-controller";
 import AnimatedModal from "../utils/animated-modal";
 import { focusWords } from "../test/test-ui";
 import {
@@ -85,19 +84,7 @@ const modal = new AnimatedModal({
     modalEl.querySelector(".openSettings")?.addEventListener("click", () => {
       showSettings();
     });
-    modalEl
-      .querySelector(".cookie.ads .textButton")
-      ?.addEventListener("click", () => {
-        try {
-          AdController.showConsentPopup();
-        } catch (e) {
-          console.error("Failed to open ad consent UI");
-          Notifications.add(
-            "Failed to open Ad consent popup. Do you have an ad or cookie popup blocker enabled?",
-            -1
-          );
-        }
-      });
+
     modalEl.querySelector(".acceptSelected")?.addEventListener("click", () => {
       const analyticsChecked = (
         modalEl.querySelector(".cookie.analytics input") as HTMLInputElement

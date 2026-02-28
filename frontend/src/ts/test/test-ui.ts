@@ -21,7 +21,6 @@ import * as ActivePage from "../states/active-page";
 import Format from "../utils/format";
 import { TimerColor, TimerOpacity } from "@rapidkey/schemas/configs";
 import { convertRemToPixels } from "../utils/numbers";
-import { findSingleActiveFunboxWithFunction } from "./funbox/list";
 import * as TestState from "./test-state";
 import * as PaceCaret from "./pace-caret";
 import { requestDebouncedAnimationFrame } from "../utils/debounced-animation-frame";
@@ -58,12 +57,7 @@ export const updateHintsPositionDebounced = Misc.debounceUntilResolved(
 );
 
 ConfigEvent.subscribe((eventKey, eventValue, nosave) => {
-  if (
-    (eventKey === "language" || eventKey === "funbox") &&
-    Config.funbox.includes("zipf")
-  ) {
-    debouncedZipfCheck();
-  }
+  // zipf funbox check removed
   if (eventKey === "fontSize") {
     $("#caret, #paceCaret, #liveStatsMini, #typingTest, #wordsInput").css(
       "fontSize",
@@ -398,12 +392,9 @@ function buildWordHTML(word: string, wordIndex: number): string {
   let newlineafter = false;
   let retval = `<div class='word' data-wordindex='${wordIndex}'>`;
 
-  const funbox = findSingleActiveFunboxWithFunction("getWordHtml");
   const chars = Strings.splitIntoCharacters(word);
   for (const char of chars) {
-    if (funbox) {
-      retval += funbox.functions.getWordHtml(char, true);
-    } else if (char === "\t") {
+    if (char === "\t") {
       retval += `<letter class='tabChar'><i class="fas fa-long-arrow-alt-right fa-fw"></i></letter>`;
     } else if (char === "\n") {
       newlineafter = true;
@@ -757,8 +748,8 @@ export async function updateActiveWordLetters(
       }
     }
 
-    const funbox = findSingleActiveFunboxWithFunction("getWordHtml");
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // funbox removed
     const inputChars = Strings.splitIntoCharacters(input);
     const currentWordChars = Strings.splitIntoCharacters(currentWord);
     for (let i = 0; i < inputChars.length; i++) {
@@ -767,12 +758,7 @@ export async function updateActiveWordLetters(
       let currentLetter = currentWordChars[i] as string;
       let tabChar = "";
       let nlChar = "";
-      if (funbox) {
-        const cl = funbox.functions.getWordHtml(currentLetter);
-        if (cl !== "") {
-          currentLetter = cl;
-        }
-      } else if (currentLetter === "\t") {
+      if (currentLetter === "\t") {
         tabChar = "tabChar";
         currentLetter = `<i class="fas fa-long-arrow-alt-right fa-fw"></i>`;
       } else if (currentLetter === "\n") {
@@ -821,9 +807,7 @@ export async function updateActiveWordLetters(
 
     for (let i = inputChars.length; i < currentWordChars.length; i++) {
       const currentLetter = currentWordChars[i];
-      if (funbox?.functions?.getWordHtml) {
-        ret += funbox.functions.getWordHtml(currentLetter as string, true);
-      } else if (currentLetter === "\t") {
+      if (currentLetter === "\t") {
         ret += `<letter class='tabChar'><i class="fas fa-long-arrow-alt-right fa-fw"></i></letter>`;
       } else if (currentLetter === "\n") {
         ret += `<letter class='nlChar'><i class="fas fa-level-down-alt fa-rotate-90 fa-fw"></i></letter>`;
@@ -1082,9 +1066,7 @@ export async function scrollTape(noAnimation = false): Promise<void> {
 export function updatePremid(): void {
   const mode2 = Misc.getMode2(Config, TestWords.currentQuote);
   let fbtext = "";
-  if (Config.funbox.length > 0) {
-    fbtext = " " + Config.funbox.join(" ");
-  }
+  // Config.funbox removed - no funbox text
   $(".pageTest #premidTestMode").text(
     `${Config.mode} ${mode2} ${Strings.getLanguageDisplayString(
       Config.language

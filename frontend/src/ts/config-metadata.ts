@@ -1,8 +1,4 @@
-import { checkCompatibility } from "@rapidkey/funbox";
-import * as DB from "./db";
 import * as Notifications from "./elements/notifications";
-import { isAuthenticated } from "./firebase";
-import { canSetFunboxWithConfig } from "./test/funbox/funbox-validation";
 import { isDevEnvironment, reloadAfter } from "./utils/misc";
 import * as ConfigSchemas from "@rapidkey/schemas/configs";
 import { roundTo1 } from "@rapidkey/util/numbers";
@@ -259,33 +255,6 @@ export const configMetadata: ConfigMetadataObject = {
     displayString: "british english",
     changeRequiresRestart: true,
   },
-  funbox: {
-    icon: "fa-gamepad",
-    changeRequiresRestart: true,
-    isBlocked: ({ value, currentConfig }) => {
-      if (!checkCompatibility(value)) {
-        Notifications.add(
-          `${capitalizeFirstLetter(
-            value.join(", ")
-          )} is an invalid combination of funboxes`,
-          0
-        );
-        return true;
-      }
-
-      for (const funbox of value) {
-        if (!canSetFunboxWithConfig(funbox, currentConfig)) {
-          Notifications.add(
-            `${value}" cannot be enabled with the current config`,
-            0
-          );
-          return true;
-        }
-      }
-
-      return false;
-    },
-  },
   customLayoutfluid: {
     icon: "fa-tint",
     displayString: "custom layoutfluid",
@@ -424,7 +393,7 @@ export const configMetadata: ConfigMetadataObject = {
     changeRequiresRestart: false,
     isBlocked: ({ value }) => {
       if (document.readyState === "complete") {
-        if ((value === "pb" || value === "tagPb") && !isAuthenticated()) {
+        if (value === "pb" || value === "tagPb") {
           Notifications.add(
             `Pace caret "pb" and "tag pb" are unavailable without an account`,
             0
@@ -661,28 +630,8 @@ export const configMetadata: ConfigMetadataObject = {
     displayString: "random theme",
     isBlocked: ({ value }) => {
       if (value === "custom") {
-        const snapshot = DB.getSnapshot();
-        if (!isAuthenticated()) {
-          Notifications.add(
-            "Random theme 'custom' is unavailable without an account",
-            0
-          );
-          return true;
-        }
-        if (!snapshot) {
-          Notifications.add(
-            "Random theme 'custom' requires a snapshot to be set",
-            0
-          );
-          return true;
-        }
-        if (snapshot?.customThemes?.length === 0) {
-          Notifications.add(
-            "Random theme 'custom' requires at least one custom theme to be saved",
-            0
-          );
-          return true;
-        }
+        Notifications.add("Random theme 'custom' is unavailable (no account)", 0);
+        return true;
       }
       return false;
     },

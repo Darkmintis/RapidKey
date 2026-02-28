@@ -16,16 +16,22 @@ import * as Arrays from "../utils/arrays";
 import * as TestState from "../test/test-state";
 import * as GetText from "../utils/generate";
 import { FunboxWordOrder } from "../utils/json-data";
-import {
-  findSingleActiveFunboxWithFunction,
-  getActiveFunboxes,
-  getActiveFunboxesWithFunction,
-  isFunboxActiveWithFunction,
-} from "./funbox/list";
 import { WordGenError } from "../utils/word-gen-error";
 import * as Loader from "../elements/loader";
-import { PolyglotWordset } from "./funbox/funbox-functions";
 import { LanguageObject } from "@rapidkey/schemas/languages";
+
+// Funbox stubs — funbox removed
+type FunboxStub = { name: string; functions: any; properties?: string[] };
+type LangProps = { noLazyMode?: boolean; additionalAccents?: string[]; ligatures?: boolean };
+function findSingleActiveFunboxWithFunction(_fn: string): FunboxStub | null { return null; }
+function getActiveFunboxes(): FunboxStub[] { return []; }
+function getActiveFunboxesWithFunction(_fn: string): FunboxStub[] { return []; }
+function isFunboxActiveWithFunction(_fn: string): false { return false; }
+class PolyglotWordset extends Wordset {
+  wordsWithLanguage = new Map<string, string>();
+  languageProperties = new Map<string, LangProps>();
+  constructor() { super([]); }
+}
 
 //pin implementation
 const random = Math.random;
@@ -394,7 +400,7 @@ function applyLazyModeToWord(word: string, language: LanguageObject): string {
     const allowLazyMode =
       (langProps && !langProps.noLazyMode) || Config.mode === "custom";
     if (Config.lazyMode && allowLazyMode && langProps) {
-      word = LazyMode.replaceAccents(word, langProps.additionalAccents);
+      word = LazyMode.replaceAccents(word, langProps.additionalAccents as [string, string][] | undefined);
     }
     return word;
   }
@@ -711,12 +717,12 @@ export async function generateWords(
 
   ret.hasTab =
     ret.words.some((w) => w.includes("\t")) ||
-    currentWordset.words.some((w) => w.includes("\t")) ||
+    (currentWordset?.words ?? []).some((w) => w.includes("\t")) ||
     (Config.mode === "quote" &&
       (quote as QuoteWithTextSplit).textSplit.some((w) => w.includes("\t")));
   ret.hasNewline =
     ret.words.some((w) => w.includes("\n")) ||
-    currentWordset.words.some((w) => w.includes("\n")) ||
+    (currentWordset?.words ?? []).some((w) => w.includes("\n")) ||
     (Config.mode === "quote" &&
       (quote as QuoteWithTextSplit).textSplit.some((w) => w.includes("\n")));
 

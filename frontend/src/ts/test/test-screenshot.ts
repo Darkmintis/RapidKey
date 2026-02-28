@@ -1,13 +1,9 @@
 import * as Loader from "../elements/loader";
 import * as Replay from "./replay";
 import * as Misc from "../utils/misc";
-import { isAuthenticated } from "../firebase";
-import { getActiveFunboxesWithFunction } from "./funbox/list";
-import * as DB from "../db";
 import * as ThemeColors from "../elements/theme-colors";
 import { format } from "date-fns/format";
 import * as ActivePage from "../states/active-page";
-import { getHtmlByUserFlags } from "../controllers/user-flag-controller";
 import * as Notifications from "../elements/notifications";
 import { convertRemToPixels } from "../utils/numbers";
 import * as TestState from "./test-state";
@@ -34,14 +30,10 @@ function revert(): void {
   $(".highlightContainer").removeClass("hidden");
   if (revertCookie) $("#cookiesModal").removeClass("hidden");
   if (revealReplay) $("#resultReplay").removeClass("hidden");
-  if (!isAuthenticated()) {
-    $(".pageTest .loginTip").removeClass("hidden");
-  }
+  // No auth: loginTip stays hidden
   (document.querySelector("html") as HTMLElement).style.scrollBehavior =
     "smooth";
-  for (const fb of getActiveFunboxesWithFunction("applyGlobalCSS")) {
-    fb.functions.applyGlobalCSS();
-  }
+  // No funboxes: skip applyGlobalCSS
 }
 
 let firefoxClipboardNotificationShown = false;
@@ -71,14 +63,7 @@ async function generateCanvas(): Promise<HTMLCanvasElement | null> {
   $("#resultReplay").addClass("hidden");
   $(".pageTest .ssWatermark").removeClass("hidden");
 
-  const snapshot = DB.getSnapshot();
   const ssWatermark = [format(dateNow, "dd MMM yyyy HH:mm"), "rapidkey.com"];
-  if (snapshot?.name !== undefined) {
-    const userText = `${snapshot?.name}${getHtmlByUserFlags(snapshot, {
-      iconsOnly: true,
-    })}`;
-    ssWatermark.unshift(userText);
-  }
   $(".pageTest .ssWatermark").html(
     ssWatermark
       .map((el) => `<span>${el}</span>`)
@@ -101,10 +86,7 @@ async function generateCanvas(): Promise<HTMLCanvasElement | null> {
   $(".wordInputHighlight").addClass("hidden");
   $(".highlightContainer").addClass("hidden");
   if (revertCookie) $("#cookiesModal").addClass("hidden");
-
-  for (const fb of getActiveFunboxesWithFunction("clearGlobal")) {
-    fb.functions.clearGlobal();
-  }
+  // No funboxes: skip clearGlobal
 
   (document.querySelector("html") as HTMLElement).style.scrollBehavior = "auto";
   window.scrollTo({ top: 0, behavior: "auto" });

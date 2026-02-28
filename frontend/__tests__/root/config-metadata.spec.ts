@@ -37,7 +37,6 @@ describe("ConfigMeta", () => {
         "minBurst",
         "minBurstCustomSpeed",
         "britishEnglish",
-        "funbox",
         "customLayoutfluid",
         "strictSpace",
         "stopOnError",
@@ -93,8 +92,8 @@ describe("ConfigMeta", () => {
       ],
       customPolyglot: [
         {
-          value: ["english", "polish", "english"],
-          expected: { customPolyglot: ["english", "polish"] },
+          value: ["english", "english"] as any,
+          expected: { customPolyglot: ["english"] },
         },
       ],
       keymapSize: [
@@ -150,13 +149,6 @@ describe("ConfigMeta", () => {
       given?: Partial<ConfigType>;
       fail?: true;
     }> = {
-      funbox: [
-        {
-          value: ["gibberish"],
-          given: { mode: "quote" },
-          fail: true,
-        },
-      ],
       showAllLines: [
         { value: true, given: { tapeMode: "off" } },
         { value: false, given: { tapeMode: "word" } },
@@ -257,7 +249,7 @@ describe("ConfigMeta", () => {
       ],
       theme: [
         {
-          value: "8008",
+          value: "8008" as any,
           given: { customTheme: true },
           expected: { customTheme: false },
         },

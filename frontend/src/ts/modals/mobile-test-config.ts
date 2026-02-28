@@ -3,7 +3,6 @@ import Config, * as UpdateConfig from "../config";
 import * as ManualRestart from "../test/manual-restart-tracker";
 import * as CustomWordAmountPopup from "./custom-word-amount";
 import * as CustomTestDurationPopup from "./custom-test-duration";
-import * as QuoteSearchModal from "./quote-search";
 import * as CustomTextPopup from "./custom-text";
 import AnimatedModal from "../utils/animated-modal";
 import { QuoteLength, QuoteLengthConfig } from "@rapidkey/schemas/configs";
@@ -140,9 +139,7 @@ async function setup(modalEl: HTMLElement): Promise<void> {
           TestLogic.restart();
         }
       } else if (lenAttr === "-2") {
-        void QuoteSearchModal.show({
-          modalChain: modal,
-        });
+        // quote search removed
       } else {
         const len = parseInt(lenAttr, 10) as QuoteLength;
         let arr: QuoteLengthConfig = [];

@@ -19,14 +19,11 @@ import {
   CustomBackgroundSizeSchema,
   CustomThemeColors,
   CustomThemeColorsSchema,
-  FunboxSchema,
-  FunboxName,
 } from "@rapidkey/schemas/configs";
 import { z } from "zod";
 import { parseWithSchema as parseJsonWithSchema } from "@rapidkey/util/json";
 import { tryCatchSync } from "@rapidkey/util/trycatch";
 import { Language } from "@rapidkey/schemas/languages";
-import * as AuthEvent from "../observables/auth-event";
 
 const customThemeUrlDataSchema = z.object({
   c: CustomThemeColorsSchema,
@@ -109,7 +106,7 @@ const TestSettingsSchema = z.tuple([
   z.boolean().nullable(), //numbers
   z.string().nullable(), //language
   DifficultySchema.nullable(),
-  FunboxSchema.or(z.string().nullable()), //funbox as array or legacy string as hash separated values
+  z.unknown().optional(), //funbox removed
 ]);
 
 export function loadTestSettingsFromUrl(getOverride?: string): void {
@@ -208,17 +205,7 @@ export function loadTestSettingsFromUrl(getOverride?: string): void {
     applied["difficulty"] = de[6];
   }
 
-  if (de[7] !== null) {
-    let val: FunboxName[] = [];
-    //convert legacy values
-    if (typeof de[7] === "string") {
-      val = de[7].split("#") as FunboxName[];
-    } else {
-      val = de[7];
-    }
-    UpdateConfig.setFunbox(val, true);
-    applied["funbox"] = val.join(", ");
-  }
+  // funbox removed: de[7] is ignored
 
   restartTest({
     nosave: true,
@@ -263,11 +250,4 @@ export function loadChallengeFromUrl(getOverride?: string): void {
     });
 }
 
-AuthEvent.subscribe((event) => {
-  if (event.type === "authStateChanged") {
-    const search = window.location.search;
-    loadCustomThemeFromUrl(search);
-    loadTestSettingsFromUrl(search);
-    loadChallengeFromUrl(search);
-  }
-});
+// AuthEvent.subscribe removed — no auth

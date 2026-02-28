@@ -7,7 +7,7 @@ import {
 import { getDefaultConfig } from "./default-config";
 import { Mode } from "@rapidkey/schemas/shared";
 import { Result } from "@rapidkey/schemas/results";
-import { Config, Difficulty, FunboxName } from "@rapidkey/schemas/configs";
+import { Config, Difficulty } from "@rapidkey/schemas/configs";
 import {
   ModifiableTestActivityCalendar,
   TestActivityCalendar,
@@ -42,7 +42,7 @@ export type SnapshotResult<M extends Mode> = Omit<
   blindMode: boolean;
   lazyMode: boolean;
   difficulty: Difficulty;
-  funbox: FunboxName[];
+  funbox: string[];
   language: Language;
   numbers: boolean;
   punctuation: boolean;

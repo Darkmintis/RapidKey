@@ -5,7 +5,6 @@ import { capsState } from "./caps-warning";
 import * as Notifications from "../elements/notifications";
 import * as KeyConverter from "../utils/key-converter";
 
-import { getActiveFunboxNames } from "./funbox/list";
 
 let isAltGrPressed = false;
 const isPunctuationPattern = /\p{P}/u;
@@ -44,7 +43,7 @@ export async function getCharFromEvent(
     return null;
   }
 
-  const funbox = getActiveFunboxNames().includes("layout_mirror");
+  const funbox = false;
   if (funbox) {
     layout = KeyConverter.mirrorLayoutKeys(layout);
   }

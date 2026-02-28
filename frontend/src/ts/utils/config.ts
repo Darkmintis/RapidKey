@@ -2,7 +2,6 @@ import {
   Config,
   ConfigValue,
   PartialConfig,
-  FunboxName,
 } from "@rapidkey/schemas/configs";
 import { typedKeys } from "./misc";
 import { sanitize } from "./sanitize";
@@ -121,16 +120,6 @@ function replaceLegacyValues(
 
   if (typeof configObj.soundVolume === "string") {
     configObj.soundVolume = parseFloat(configObj.soundVolume);
-  }
-
-  if (typeof configObj.funbox === "string") {
-    if (configObj.funbox === "none") {
-      configObj.funbox = [];
-    } else {
-      configObj.funbox = (configObj.funbox as string).split(
-        "#"
-      ) as FunboxName[];
-    }
   }
 
   if (typeof configObj.customLayoutfluid === "string") {

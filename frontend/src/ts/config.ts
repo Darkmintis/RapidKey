@@ -1,13 +1,7 @@
-import * as DB from "./db";
 import * as Notifications from "./elements/notifications";
 import { isConfigValueValid } from "./config-validation";
 import * as ConfigEvent from "./observables/config-event";
-import * as AccountButton from "./elements/account-button";
 import { debounce } from "throttle-debounce";
-import {
-  canSetConfigWithCurrentFunboxes,
-  canSetFunboxWithConfig,
-} from "./test/funbox/funbox-validation";
 import {
   createErrorMessage,
   isObject,
@@ -16,7 +10,7 @@ import {
   typedKeys,
 } from "./utils/misc";
 import * as ConfigSchemas from "@rapidkey/schemas/configs";
-import { Config, FunboxName } from "@rapidkey/schemas/configs";
+import { Config } from "@rapidkey/schemas/configs";
 import { Mode } from "@rapidkey/schemas/shared";
 import { Language } from "@rapidkey/schemas/languages";
 import { LocalStorageWithSchema } from "./utils/local-storage-with-schema";
@@ -48,12 +42,6 @@ let config: Config = {
 
 let configToSend: Partial<Config> = {};
 const saveToDatabase = debounce(1000, () => {
-  if (Object.keys(configToSend).length > 0) {
-    AccountButton.loading(true);
-    void DB.saveConfig(configToSend).then(() => {
-      AccountButton.loading(false);
-    });
-  }
   configToSend = {} as Config;
 });
 
@@ -76,21 +64,13 @@ function saveToLocalStorage(
 export function saveFullConfigToLocalStorage(noDbCheck = false): void {
   console.log("saving full config to localStorage");
   configLS.set(config);
-  if (!noDbCheck) {
-    AccountButton.loading(true);
-    void DB.saveConfig(config);
-    AccountButton.loading(false);
-  }
   const stringified = JSON.stringify(config);
   ConfigEvent.dispatch("saveToLocalStorage", stringified);
 }
 
 function isConfigChangeBlocked(): boolean {
-  if (TestState.isActive && config.funbox.includes("no_quit")) {
-    Notifications.add("No quit funbox is active. Please finish the test.", 0, {
-      important: true,
-    });
-    return true;
+  if (TestState.isActive) {
+    // test active, changes blocked (no_quit funbox removed)
   }
   return false;
 }
@@ -115,21 +95,6 @@ export function genericSet<T extends keyof ConfigSchemas.Config>(
 
   const previousValue = config[key];
 
-  if (
-    metadata.changeRequiresRestart &&
-    TestState.isActive &&
-    config.funbox.includes("no_quit")
-  ) {
-    Notifications.add("No quit funbox is active. Please finish the test.", 0, {
-      important: true,
-    });
-    console.warn(
-      `Could not set config key "${key}" with value "${JSON.stringify(
-        value
-      )}" - no quit funbox active.`
-    );
-    return false;
-  }
 
   if (metadata.isBlocked?.({ value, currentConfig: config })) {
     console.warn(
@@ -151,14 +116,7 @@ export function genericSet<T extends keyof ConfigSchemas.Config>(
     return false;
   }
 
-  if (!canSetConfigWithCurrentFunboxes(key, value, config.funbox)) {
-    console.warn(
-      `Could not set config key "${key}" with value "${JSON.stringify(
-        value
-      )}" - funbox conflict.`
-    );
-    return false;
-  }
+  // funbox validation removed
 
   if (metadata.overrideConfig) {
     const targetConfig = metadata.overrideConfig({
@@ -256,37 +214,14 @@ export function setFavThemes(
 }
 
 export function setFunbox(
-  funbox: ConfigSchemas.Funbox,
-  nosave?: boolean
+  _funbox: unknown,
+  _nosave?: boolean
 ): boolean {
-  return genericSet("funbox", funbox, nosave);
+  return false; // funbox removed
 }
 
-export function toggleFunbox(funbox: FunboxName, nosave?: boolean): boolean {
-  if (isConfigChangeBlocked()) return false;
-
-  if (!canSetFunboxWithConfig(funbox, config)) {
-    return false;
-  }
-
-  let newConfig: FunboxName[] = config.funbox;
-
-  if (newConfig.includes(funbox)) {
-    newConfig = newConfig.filter((it) => it !== funbox);
-  } else {
-    newConfig.push(funbox);
-    newConfig.sort();
-  }
-
-  if (!isConfigValueValid("funbox", newConfig, ConfigSchemas.FunboxSchema)) {
-    return false;
-  }
-
-  config.funbox = newConfig;
-  saveToLocalStorage("funbox", nosave);
-  ConfigEvent.dispatch("funbox", config.funbox);
-
-  return true;
+export function toggleFunbox(_funbox: unknown, _nosave?: boolean): boolean {
+  return false; // funbox removed
 }
 
 export function setBlindMode(blind: boolean, nosave?: boolean): boolean {
@@ -812,7 +747,6 @@ const lastConfigsToApply: Set<keyof Config> = new Set([
   "mode", // mode sets punctuation and numbers
   "numbers",
   "punctuation",
-  "funbox",
 ]);
 
 export async function apply(partialConfig: Partial<Config>): Promise<void> {
@@ -861,7 +795,6 @@ export async function apply(partialConfig: Partial<Config>): Promise<void> {
 
 export async function reset(): Promise<void> {
   await apply(getDefaultConfig());
-  await DB.resetConfig();
   saveFullConfigToLocalStorage(true);
 }
 

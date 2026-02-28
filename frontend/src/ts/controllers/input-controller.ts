@@ -8,7 +8,6 @@ import * as JSONData from "../utils/json-data";
 import * as Numbers from "@rapidkey/util/numbers";
 import * as LiveAcc from "../test/live-acc";
 import * as LiveBurst from "../test/live-burst";
-import * as Funbox from "../test/funbox/funbox";
 import * as Sound from "./sound-controller";
 import * as Caret from "../test/caret";
 import * as ManualRestart from "../test/manual-restart-tracker";
@@ -35,12 +34,6 @@ import { ModifierKeys } from "../constants/modifier-keys";
 import { navigate } from "./route-controller";
 import * as Loader from "../elements/loader";
 import * as KeyConverter from "../utils/key-converter";
-import {
-  findSingleActiveFunboxWithFunction,
-  getActiveFunboxesWithFunction,
-  isFunboxActiveWithProperty,
-  getActiveFunboxNames,
-} from "../test/funbox/list";
 import { tryCatchSync } from "@rapidkey/util/trycatch";
 import { canQuickRestart } from "../utils/quick-restart";
 import * as PageTransition from "../states/page-transition";
@@ -149,13 +142,10 @@ function backspaceToPrevious(): void {
 
   TestInput.input.current = TestInput.input.popHistory();
   TestInput.corrected.popHistory();
-  if (isFunboxActiveWithProperty("nospace")) {
-    TestInput.input.current = TestInput.input.current.slice(0, -1);
-    setWordsInput(" " + TestInput.input.current + " ");
-  }
+  // nospace funbox removed
   TestState.decreaseActiveWordIndex();
   TestUI.updateActiveElement(true);
-  Funbox.toggleScript(TestWords.words.getCurrent());
+  // Funbox.toggleScript removed
   void TestUI.updateActiveWordLetters();
 
   if (Config.mode === "zen") {
@@ -196,9 +186,7 @@ async function handleSpace(): Promise<void> {
 
   const currentWord: string = TestWords.words.getCurrent();
 
-  for (const fb of getActiveFunboxesWithFunction("handleSpace")) {
-    fb.functions.handleSpace();
-  }
+  // getActiveFunboxesWithFunction("handleSpace") removed
 
   dontInsertSpace = true;
 
@@ -206,9 +194,7 @@ async function handleSpace(): Promise<void> {
   void LiveBurst.update(Math.round(burst));
   TestInput.pushBurstToHistory(burst);
 
-  const nospace = isFunboxActiveWithProperty("nospace");
-
-  //correct word or in zen mode
+  const nospace = false; // isFunboxActiveWithProperty removed
   const isWordCorrect: boolean =
     currentWord === TestInput.input.current || Config.mode === "zen";
   void MonkeyPower.addPower(isWordCorrect, true);
@@ -220,7 +206,7 @@ async function handleSpace(): Promise<void> {
     PaceCaret.handleSpace(true, currentWord);
     TestInput.input.pushHistory();
     TestState.increaseActiveWordIndex();
-    Funbox.toggleScript(TestWords.words.getCurrent());
+    // Funbox.toggleScript removed
     TestInput.incrementKeypressCount();
     TestInput.pushKeypressWord(TestState.activeWordIndex);
     if (!nospace) {
@@ -272,7 +258,7 @@ async function handleSpace(): Promise<void> {
     }
     TestInput.input.pushHistory();
     TestState.increaseActiveWordIndex();
-    Funbox.toggleScript(TestWords.words.getCurrent());
+    // Funbox.toggleScript removed
     TestInput.incrementKeypressCount();
     TestInput.pushKeypressWord(TestState.activeWordIndex);
     Replay.addReplayEvent("submitErrorWord");
@@ -391,9 +377,9 @@ function isCharCorrect(char: string, charIndex: number): boolean {
     return true;
   }
 
-  const funbox = findSingleActiveFunboxWithFunction("isCharCorrect");
+  const funbox = null; // findSingleActiveFunboxWithFunction removed
   if (funbox) {
-    return funbox.functions.isCharCorrect(char, originalChar);
+    // no-op
   }
 
   if (Config.language.startsWith("russian")) {
@@ -477,11 +463,9 @@ async function handleChar(
 
   const isCharKorean: boolean = TestInput.input.getKoreanStatus();
 
-  for (const fb of getActiveFunboxesWithFunction("handleChar")) {
-    char = fb.functions.handleChar(char);
-  }
+  // getActiveFunboxesWithFunction("handleChar") removed
 
-  const nospace = isFunboxActiveWithProperty("nospace");
+  const nospace = false; // isFunboxActiveWithProperty removed
 
   if (char !== "\n" && char !== "\t" && /\s/.test(char)) {
     if (nospace) return;
@@ -798,7 +782,7 @@ async function handleTab(
     if (modalVisible) return;
 
     // dont do anything on login so we can tab/esc between inputs
-    if (ActivePage.get() === "login") return;
+    if ((ActivePage.get() as string) === "login") return;
 
     event.preventDefault();
     // insert tab character if needed (only during the test)
@@ -812,7 +796,7 @@ async function handleTab(
     if (modalVisible) return;
 
     // dont do anything on login so we can tab/esc betweeen inputs
-    if (ActivePage.get() === "login") return;
+    if ((ActivePage.get() as string) === "login") return;
 
     // change page if not on test page
     if (ActivePage.get() !== "test") {
@@ -896,9 +880,7 @@ $(document).on("keydown", async (event) => {
     return;
   }
 
-  for (const fb of getActiveFunboxesWithFunction("handleKeydown")) {
-    void fb.functions.handleKeydown(event);
-  }
+  // getActiveFunboxesWithFunction("handleKeydown") removed
 
   //autofocus
   const wordsFocused: boolean = $("#wordsInput").is(":focus");
@@ -993,8 +975,8 @@ $(document).on("keydown", async (event) => {
     if (Config.mode === "zen") {
       //do nothing
     } else if (
-      (!TestWords.hasNewline && !Config.funbox.includes("58008")) ||
-      ((TestWords.hasNewline || Config.funbox.includes("58008")) &&
+      (!TestWords.hasNewline) ||
+      (TestWords.hasNewline &&
         event.shiftKey)
     ) {
       // in case we are in a long test, setting manual restart
@@ -1136,7 +1118,7 @@ $(document).on("keydown", async (event) => {
         return;
       }
 
-      const funbox = getActiveFunboxNames().includes("layout_mirror");
+      const funbox = false; // getActiveFunboxNames removed
       if (funbox) {
         keymapLayout = KeyConverter.mirrorLayoutKeys(keymapLayout);
       }
@@ -1154,20 +1136,7 @@ $(document).on("keydown", async (event) => {
     }
   }
 
-  for (const fb of getActiveFunboxesWithFunction("preventDefaultEvent")) {
-    if (
-      await fb.functions.preventDefaultEvent(
-        //i cant figure this type out, but it works fine
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        event as JQuery.KeyDownEvent
-      )
-    ) {
-      event.preventDefault();
-      await handleChar(event.key, TestInput.input.current.length);
-      updateUI();
-      setWordsInput(" " + TestInput.input.current);
-    }
-  }
+  // getActiveFunboxesWithFunction("preventDefaultEvent") removed
 
   if (
     Config.layout !== "default" &&
@@ -1201,13 +1170,7 @@ $("#wordsInput").on("keydown", (event) => {
   Monkey.type(event);
   // console.debug("Event: keydown", event);
 
-  if (event.code === "NumpadEnter" && Config.funbox.includes("58008")) {
-    event.code = "Space";
-  }
-
-  if (event.code.includes("Arrow") && Config.funbox.includes("arrows")) {
-    event.code = "NoCode";
-  }
+  // Config.funbox: 58008 and arrows removed
 
   const now = performance.now();
   setTimeout(() => {
@@ -1232,13 +1195,7 @@ $("#wordsInput").on("keyup", (event) => {
 
   // console.debug("Event: keyup", event);
 
-  if (event.code === "NumpadEnter" && Config.funbox.includes("58008")) {
-    event.code = "Space";
-  }
-
-  if (event.code.includes("Arrow") && Config.funbox.includes("arrows")) {
-    event.code = "NoCode";
-  }
+  // Config.funbox: 58008 and arrows removed
 
   const now = performance.now();
   setTimeout(() => {

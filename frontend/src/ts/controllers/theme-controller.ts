@@ -6,7 +6,6 @@ import { isColorDark, isColorLight } from "../utils/colors";
 import Config, { setAutoSwitchTheme, setCustomTheme } from "../config";
 import * as BackgroundFilter from "../elements/custom-background-filter";
 import * as ConfigEvent from "../observables/config-event";
-import * as DB from "../db";
 import * as Notifications from "../elements/notifications";
 import * as Loader from "../elements/loader";
 import { debounce } from "throttle-debounce";
@@ -304,8 +303,8 @@ async function changeThemeList(): Promise<void> {
     themesList = themes.map((t) => {
       return t.name;
     });
-  } else if (Config.randomTheme === "custom" && DB.getSnapshot()) {
-    themesList = DB.getSnapshot()?.customThemes?.map((ct) => ct._id) ?? [];
+  } else if (Config.randomTheme === "custom") {
+    themesList = []; // no custom themes without account
   }
   Arrays.shuffle(themesList);
   randomThemeIndex = 0;
@@ -326,25 +325,13 @@ export async function randomizeTheme(): Promise<void> {
 
   let colorsOverride: string[] | undefined;
 
-  if (Config.randomTheme === "custom") {
-    const theme = DB.getSnapshot()?.customThemes?.find(
-      (ct) => ct._id === randomTheme
-    );
-    colorsOverride = theme?.colors;
-    randomTheme = "custom";
-  }
+  // no custom themes without account
 
   setCustomTheme(false, true);
   await apply(randomTheme, colorsOverride);
 
   if (randomThemeIndex >= themesList.length) {
-    let name = randomTheme.replace(/_/g, " ");
-    if (Config.randomTheme === "custom") {
-      name = (
-        DB.getSnapshot()?.customThemes?.find((ct) => ct._id === randomTheme)
-          ?.name ?? "custom"
-      ).replace(/_/g, " ");
-    }
+    const name = randomTheme.replace(/_/g, " ");
     Notifications.add(name, 0);
   }
 }

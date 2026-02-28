@@ -1,15 +1,10 @@
-//TODO: use Format
 import { Chart, type PluginChartOptions } from "chart.js";
 import Config from "../config";
-import * as AdController from "../controllers/ad-controller";
 import * as ChartController from "../controllers/chart-controller";
 import QuotesController, { Quote } from "../controllers/quotes-controller";
-import * as DB from "../db";
 import * as Loader from "../elements/loader";
 import * as Notifications from "../elements/notifications";
 import * as ThemeColors from "../elements/theme-colors";
-import { isAuthenticated } from "../firebase";
-import * as quoteRateModal from "../modals/quote-rate";
 import * as GlarsesMode from "../states/glarses-mode";
 import * as SlowTimer from "../states/slow-timer";
 import * as DateTime from "../utils/date-and-time";
@@ -28,23 +23,34 @@ import * as ConfigEvent from "../observables/config-event";
 import * as Focus from "./focus";
 import * as CustomText from "./custom-text";
 import * as CustomTextState from "./../states/custom-text-name";
-import * as Funbox from "./funbox/funbox";
 import Format from "../utils/format";
 import confetti from "canvas-confetti";
 import type {
   AnnotationOptions,
   LabelPosition,
 } from "chartjs-plugin-annotation";
-import Ape from "../ape";
 import { CompletedEvent } from "@rapidkey/schemas/results";
-import { getActiveFunboxes, isFunboxActiveWithProperty } from "./funbox/list";
-import { getFunbox } from "@rapidkey/funbox";
 import { SnapshotUserTag } from "../constants/default-snapshot";
 import { Language } from "@rapidkey/schemas/languages";
 import { canQuickRestart as canQuickRestartFn } from "../utils/quick-restart";
 import { LocalStorageWithSchema } from "../utils/local-storage-with-schema";
 import { z } from "zod";
 import * as TestState from "./test-state";
+
+// Removed module stubs
+function getFunbox(_names: any): { canGetPb?: boolean }[] { return []; }
+function getActiveFunboxes(): { name: string; functions?: Record<string, () => any>; properties?: string[] }[] { return []; }
+function isFunboxActiveWithProperty(_prop: string): false { return false; }
+function isAuthenticated(): false { return false; }
+const DB = {
+  getSnapshot: (): any => undefined,
+  getLocalPB: async (..._a: any[]): Promise<{ wpm: number } | null> => null,
+  getLocalTagPB: async (..._a: any[]): Promise<number> => 0,
+  saveLocalTagPB: async (..._a: any[]): Promise<void> => {},
+};
+const AdController = { renderResult: () => {}, updateFooterAndVerticalAds: (_b: boolean) => {} };
+const Ape = { users: { removeQuoteFromFavorites: async (_a: any) => ({ status: 200, body: { message: "ok" } }), addQuoteToFavorites: async (_a: any) => ({ status: 200, body: { message: "ok" } }) } };
+const quoteRateModal = { getQuoteStats: async (_q: any): Promise<{ average?: number } | null> => null };
 
 let result: CompletedEvent;
 let maxChartVal: number;
@@ -152,43 +158,7 @@ async function updateGraph(): Promise<void> {
 
   const subcolor = await ThemeColors.get("sub");
 
-  if (Config.funbox.length > 0) {
-    let content = "";
-    for (const fb of getActiveFunboxes()) {
-      content += fb.name;
-      if (fb.functions?.getResultContent) {
-        content += "(" + fb.functions.getResultContent() + ")";
-      }
-      content += " ";
-    }
-    content = content.trimEnd();
-    resultAnnotation.push({
-      display: true,
-      id: "funbox-label",
-      type: "line",
-      scaleID: "wpm",
-      value: ChartController.result.getScale("wpm").min,
-      borderColor: "transparent",
-      borderWidth: 1,
-      borderDash: [2, 2],
-      label: {
-        backgroundColor: "transparent",
-        font: {
-          family: Config.fontFamily.replace(/_/g, " "),
-          size: 11,
-          style: "normal",
-          weight: Chart.defaults.font.weight as string,
-          lineHeight: Chart.defaults.font.lineHeight as number,
-        },
-        color: subcolor,
-        padding: 3,
-        borderRadius: 3,
-        position: "start",
-        display: true,
-        content: `${content}`,
-      },
-    });
-  }
+  // funbox removed: no funbox annotation
 
   ChartController.result.data.labels = labels;
 
@@ -309,7 +279,7 @@ export async function updateGraphPBLine(): Promise<void> {
     result.language,
     result.difficulty,
     result.lazyMode ?? false,
-    getFunbox(result.funbox)
+    getFunbox([])
   );
   const localPbWpm = localPb?.wpm ?? 0;
   if (localPbWpm === 0) return;
@@ -607,11 +577,7 @@ type CanGetPbObject = {
 };
 
 async function resultCanGetPb(): Promise<CanGetPbObject> {
-  const funboxes = result.funbox;
-  const funboxObjects = getFunbox(result.funbox);
-  const allFunboxesCanGetPb = funboxObjects.every((f) => f?.canGetPb);
-
-  const funboxesOk = funboxes.length === 0 || allFunboxesCanGetPb;
+  const funboxesOk = true; // funbox removed
   // allow stopOnError:letter to be PB only if 100% accuracy, since it doesn't affect gameplay
   const stopOnLetterTriggered =
     Config.stopOnError === "letter" && result.acc < 100;
@@ -683,7 +649,7 @@ async function updateTags(dontSave: boolean): Promise<void> {
   const activeTags: SnapshotUserTag[] = [];
   const userTagsCount = DB.getSnapshot()?.tags?.length ?? 0;
   try {
-    DB.getSnapshot()?.tags?.forEach((tag) => {
+    DB.getSnapshot()?.tags?.forEach((tag: SnapshotUserTag) => {
       if (tag.active === true) {
         activeTags.push(tag);
       }
@@ -810,7 +776,7 @@ function updateTestType(randomQuote: Quote | null): void {
       testType += " " + ["short", "medium", "long", "thicc"][randomQuote.group];
     }
   }
-  const ignoresLanguage = isFunboxActiveWithProperty("ignoresLanguage");
+  const ignoresLanguage = false; // funbox removed
   if (Config.mode !== "custom" && !ignoresLanguage) {
     testType += "<br>" + Strings.getLanguageDisplayString(result.language);
   }
@@ -826,10 +792,7 @@ function updateTestType(randomQuote: Quote | null): void {
   if (Config.lazyMode) {
     testType += "<br>lazy";
   }
-  if (Config.funbox.length > 0) {
-    testType +=
-      "<br>" + Config.funbox.map((it) => it.replace(/_/g, " ")).join(", ");
-  }
+  // funbox removed
   if (Config.difficulty === "expert") {
     testType += "<br>expert";
   } else if (Config.difficulty === "master") {
@@ -911,7 +874,7 @@ export function updateRateQuote(randomQuote: Quote | null): void {
     }
 
     const userqr =
-      DB.getSnapshot()?.quoteRatings?.[randomQuote.language]?.[randomQuote.id];
+      DB.getSnapshot()?.quoteRatings?.[randomQuote.language ?? ""]?.[randomQuote.id];
     if (Numbers.isSafeNumber(userqr)) {
       $(".pageTest #result #rateQuoteButton .icon")
         .removeClass("far")
@@ -949,7 +912,7 @@ function updateQuoteFavorite(randomQuote: Quote | null): void {
     return;
   }
 
-  quoteLang = Config.mode === "quote" ? randomQuote.language : undefined;
+  quoteLang = Config.mode === "quote" ? randomQuote.language as Language | undefined : undefined;
   quoteId = Config.mode === "quote" ? randomQuote.id.toString() : "";
 
   const userFav = QuotesController.isQuoteFavorite(randomQuote);
@@ -1081,7 +1044,7 @@ export async function update(
         preventScroll: true,
       });
       Misc.scrollToCenterOrTop(result);
-      void AdController.renderResult();
+      AdController.renderResult();
       TestUI.setResultCalculating(false);
       $("#words").empty();
       ChartController.result.resize();
@@ -1111,7 +1074,6 @@ export async function update(
         TestUI.toggleResultWords(true);
       }
       AdController.updateFooterAndVerticalAds(true);
-      void Funbox.clear();
     }
   );
 }
@@ -1193,7 +1155,7 @@ export function updateTagsAfterEdit(
 
   if (tagIds.length > 0) {
     for (const tag of tagIds) {
-      DB.getSnapshot()?.tags?.forEach((snaptag) => {
+      DB.getSnapshot()?.tags?.forEach((snaptag: SnapshotUserTag) => {
         if (tag === snaptag._id) {
           tagNames.push(snaptag.display);
         }
@@ -1260,56 +1222,8 @@ $(".pageTest #result .chart .chartLegend button").on("click", (event) => {
 });
 
 $(".pageTest #favoriteQuoteButton").on("click", async () => {
-  if (quoteLang === undefined || quoteId === "") {
-    Notifications.add("Could not get quote stats!", -1);
-    return;
-  }
-
-  const $button = $(".pageTest #favoriteQuoteButton .icon");
-  const dbSnapshot = DB.getSnapshot();
-  if (!dbSnapshot) return;
-
-  if ($button.hasClass("fas")) {
-    // Remove from
-    Loader.show();
-    const response = await Ape.users.removeQuoteFromFavorites({
-      body: {
-        language: quoteLang,
-        quoteId,
-      },
-    });
-    Loader.hide();
-
-    Notifications.add(response.body.message, response.status === 200 ? 1 : -1);
-
-    if (response.status === 200) {
-      $button.removeClass("fas").addClass("far");
-      const quoteIndex = dbSnapshot.favoriteQuotes?.[quoteLang]?.indexOf(
-        quoteId
-      ) as number;
-      dbSnapshot.favoriteQuotes?.[quoteLang]?.splice(quoteIndex, 1);
-    }
-  } else {
-    // Add to favorites
-    Loader.show();
-    const response = await Ape.users.addQuoteToFavorites({
-      body: { language: quoteLang, quoteId },
-    });
-    Loader.hide();
-
-    Notifications.add(response.body.message, response.status === 200 ? 1 : -1);
-
-    if (response.status === 200) {
-      $button.removeClass("far").addClass("fas");
-      if (dbSnapshot.favoriteQuotes === undefined) {
-        dbSnapshot.favoriteQuotes = {};
-      }
-      if (!dbSnapshot.favoriteQuotes[quoteLang]) {
-        dbSnapshot.favoriteQuotes[quoteLang] = [];
-      }
-      dbSnapshot.favoriteQuotes[quoteLang]?.push(quoteId);
-    }
-  }
+  // No account system — favorite quotes not supported
+  void Ape; void DB;
 });
 
 ConfigEvent.subscribe(async (eventKey) => {

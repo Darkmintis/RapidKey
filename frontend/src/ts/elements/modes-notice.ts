@@ -1,15 +1,12 @@
 import * as PaceCaret from "../test/pace-caret";
 import * as TestState from "../test/test-state";
-import * as DB from "../db";
 import * as Last10Average from "../elements/last-10-average";
 import Config from "../config";
 import * as TestWords from "../test/test-words";
 import * as ConfigEvent from "../observables/config-event";
-import { isAuthenticated } from "../firebase";
 import * as CustomTextState from "../states/custom-text-name";
 import { getLanguageDisplayString } from "../utils/strings";
 import Format from "../utils/format";
-import { getActiveFunboxNames } from "../test/funbox/list";
 import { escapeHTML } from "../utils/misc";
 
 ConfigEvent.subscribe((eventKey) => {
@@ -68,7 +65,7 @@ export async function update(): Promise<void> {
   }
 
   if (
-    (TestWords.hasNewline || Config.funbox.includes("58008")) &&
+    (TestWords.hasNewline) &&
     Config.quickRestart === "enter"
   ) {
     $(".pageTest #testModesNotice").append(
@@ -98,7 +95,7 @@ export async function update(): Promise<void> {
     );
   }
 
-  const usingPolyglot = getActiveFunboxNames().includes("polyglot");
+  const usingPolyglot = false; // funbox removed
 
   if (Config.mode !== "zen" && !usingPolyglot) {
     $(".pageTest #testModesNotice").append(
@@ -174,7 +171,7 @@ export async function update(): Promise<void> {
     const avgWPM = Last10Average.getWPM();
     const avgAcc = Last10Average.getAcc();
 
-    if (isAuthenticated() && avgWPM > 0) {
+    if (avgWPM > 0) {
       const avgWPMText = ["speed", "both"].includes(Config.showAverage)
         ? Format.typingSpeed(avgWPM, { suffix: ` ${Config.typingSpeedUnit}` })
         : "";
@@ -217,14 +214,6 @@ export async function update(): Promise<void> {
     );
   }
 
-  if (Config.funbox.length > 0) {
-    $(".pageTest #testModesNotice").append(
-      `<button class="textButton" commands="funbox"><i class="fas fa-gamepad"></i>${Config.funbox
-        .map((it) => it.replace(/_/g, " "))
-        .join(", ")}</button>`
-    );
-  }
-
   if (Config.confidenceMode === "on") {
     $(".pageTest #testModesNotice").append(
       `<button class="textButton" commands="confidenceMode"><i class="fas fa-backspace"></i>confidence</button>`
@@ -259,23 +248,7 @@ export async function update(): Promise<void> {
     );
   }
 
-  let tagsString = "";
-  try {
-    DB.getSnapshot()?.tags?.forEach((tag) => {
-      if (tag.active === true) {
-        tagsString += tag.display + ", ";
-      }
-    });
-
-    if (tagsString !== "") {
-      $(".pageTest #testModesNotice").append(
-        `<button class="textButton" commands="tags"><i class="fas fa-tag"></i>${tagsString.substring(
-          0,
-          tagsString.length - 2
-        )}</button>`
-      );
-    }
-  } catch {}
+  // tags removed (no account)
 }
 
 if (import.meta.hot !== undefined) {

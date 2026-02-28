@@ -20,27 +20,27 @@ describe("misc.ts", () => {
           expected: "english",
         },
         {
-          input: "english_1k",
+          input: "english_1k" as any,
           noSizeString: false,
           expected: "english 1k",
         },
         {
-          input: "english_1k",
+          input: "english_1k" as any,
           noSizeString: true,
           expected: "english",
         },
         {
-          input: "english_medical",
+          input: "english_medical" as any,
           noSizeString: false,
           expected: "english medical",
         },
         {
-          input: "arabic_egypt_1k",
+          input: "arabic_egypt_1k" as any,
           noSizeString: false,
           expected: "arabic egypt 1k",
         },
         {
-          input: "arabic_egypt_1k",
+          input: "arabic_egypt_1k" as any,
           noSizeString: true,
           expected: "arabic egypt",
         },
@@ -54,7 +54,7 @@ describe("misc.ts", () => {
   });
   describe("removeLanguageSize", () => {
     it("should remove language size", () => {
-      const tests: { input: Language; expected: Language }[] = [
+      const tests: { input: any; expected: string }[] = [
         {
           input: "english",
           expected: "english",

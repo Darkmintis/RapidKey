@@ -13,7 +13,6 @@ import { capsState } from "../test/caps-warning";
 import * as ShiftTracker from "../test/shift-tracker";
 import * as AltTracker from "../test/alt-tracker";
 import * as KeyConverter from "../utils/key-converter";
-import { getActiveFunboxNames } from "../test/funbox/list";
 import { areSortedArraysEqual } from "../utils/arrays";
 import { LayoutObject } from "@rapidkey/schemas/layouts";
 
@@ -436,7 +435,7 @@ export async function refresh(): Promise<void> {
       layoutData = stenoKeys;
     }
 
-    const funbox = getActiveFunboxNames().includes("layout_mirror");
+    const funbox = false; // no funbox
     if (funbox) {
       layoutData = KeyConverter.mirrorLayoutKeys(layoutData);
     }

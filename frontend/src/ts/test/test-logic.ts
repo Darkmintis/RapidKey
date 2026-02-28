@@ -1,4 +1,3 @@
-import Ape from "../ape";
 import * as TestUI from "./test-ui";
 import * as ManualRestart from "./manual-restart-tracker";
 import Config, * as UpdateConfig from "../config";
@@ -15,7 +14,6 @@ import * as PractiseWords from "./practise-words";
 import * as ShiftTracker from "./shift-tracker";
 import * as AltTracker from "./alt-tracker";
 import * as Focus from "./focus";
-import * as Funbox from "./funbox/funbox";
 import * as Keymap from "../elements/keymap";
 import * as ThemeController from "../controllers/theme-controller";
 import * as ResultWordHighlight from "../elements/result-word-highlight";
@@ -28,12 +26,9 @@ import * as TimerProgress from "./timer-progress";
 
 import * as TestTimer from "./test-timer";
 import * as OutOfFocus from "./out-of-focus";
-import * as AccountButton from "../elements/account-button";
-import * as DB from "../db";
 import * as Replay from "./replay";
 import * as TodayTracker from "./today-tracker";
 import * as ChallengeContoller from "../controllers/challenge-controller";
-import * as QuoteRateModal from "../modals/quote-rate";
 import * as Result from "./result";
 import * as MonkeyPower from "../elements/monkey-power";
 import * as ActivePage from "../states/active-page";
@@ -48,14 +43,8 @@ import * as TimerEvent from "../observables/timer-event";
 import * as Last10Average from "../elements/last-10-average";
 import * as Monkey from "./monkey";
 import objectHash from "object-hash";
-import * as AnalyticsController from "../controllers/analytics-controller";
-import { getAuthenticatedUser, isAuthenticated } from "../firebase";
-import * as AdController from "../controllers/ad-controller";
 import * as TestConfig from "./test-config";
-import * as ConnectionState from "../states/connection";
-import * as MemoryFunboxTimer from "./funbox/memory-funbox-timer";
 import * as KeymapEvent from "../observables/keymap-event";
-import * as LayoutfluidFunboxTimer from "../test/funbox/layoutfluid-funbox-timer";
 import * as ArabicLazyMode from "../states/arabic-lazy-mode";
 import Format from "../utils/format";
 import { QuoteLength, QuoteLengthConfig } from "@rapidkey/schemas/configs";
@@ -64,24 +53,42 @@ import {
   CompletedEvent,
   CompletedEventCustomText,
 } from "@rapidkey/schemas/results";
-import * as XPBar from "../elements/xp-bar";
-import {
-  findSingleActiveFunboxWithFunction,
-  getActiveFunboxes,
-  getActiveFunboxesWithFunction,
-  getActiveFunboxNames,
-  isFunboxActive,
-  isFunboxActiveWithProperty,
-} from "./funbox/list";
-import { getFunbox } from "@rapidkey/funbox";
 import * as CompositionState from "../states/composition";
 import { SnapshotResult } from "../constants/default-snapshot";
 import { WordGenError } from "../utils/word-gen-error";
 import { tryCatch } from "@rapidkey/util/trycatch";
-import * as Sentry from "../sentry";
 import * as Loader from "../elements/loader";
 import * as TestInitFailed from "../elements/test-init-failed";
 import { canQuickRestart } from "../utils/quick-restart";
+
+// Removed module stubs
+type FunboxStub = { name: string; functions: any; properties?: string[] };
+function findSingleActiveFunboxWithFunction(_fn: string): FunboxStub | null { return null; }
+function getActiveFunboxes(): FunboxStub[] { return []; }
+function getActiveFunboxesWithFunction(_fn: string): FunboxStub[] { return []; }
+function getActiveFunboxNames(): string[] { return []; }
+function isFunboxActive(_n: string): false { return false; }
+function isFunboxActiveWithProperty(_p: string): false { return false; }
+function getFunbox(_n: any): { canGetPb?: boolean }[] { return []; }
+function isAuthenticated(): false { return false; }
+function getAuthenticatedUser(): { uid: string } { return { uid: "" }; }
+const Ape = { results: { add: async (_a: any) => ({ status: 200, body: { message: "ok", data: {} as any } }) } };
+const Funbox = { activate: async () => {}, rememberSettings: async () => {}, toggleScript: (_w: string) => {}, clear: async () => {} };
+const AccountButton = { loading: (_b: boolean) => {} };
+const DB = {
+  getSnapshot: (): any => undefined,
+  getLocalPB: async (..._a: any[]): Promise<{ wpm: number } | null> => null,
+  saveLocalResult: (_d: any) => {},
+};
+type SaveLocalResultData = Record<string, any>;
+const QuoteRateModal = { clearQuoteStats: () => {} };
+const AnalyticsController = { log: async (_e: string) => {} };
+const AdController = { updateFooterAndVerticalAds: (_b: boolean) => {}, destroyResult: () => {} };
+const ConnectionState = { get: (): false => false, showOfflineBanner: () => {} };
+const MemoryFunboxTimer = { reset: () => {} };
+const LayoutfluidFunboxTimer = { hide: () => {} };
+const XPBar = { skipBreakdown: async () => {}, update: async (..._args: any[]) => {} };
+const Sentry = { captureException: (_e: any) => {} };
 
 let failReason = "";
 const koInputVisual = document.getElementById("koInputVisual") as HTMLElement;
@@ -237,7 +244,7 @@ export function restart(options = {} as RestartOptions): void {
   if (
     Config.mode === "quote" &&
     TestWords.currentQuote !== null &&
-    Config.language.startsWith(TestWords.currentQuote.language) &&
+    Config.language.startsWith(TestWords.currentQuote.language ?? "") &&
     Config.repeatQuotes === "typing" &&
     (TestState.isActive || failReason !== "")
   ) {
@@ -539,7 +546,7 @@ async function init(): Promise<boolean> {
     },
     mode: Config.mode,
     mode2: Misc.getMode2(Config, null),
-    funbox: Config.funbox,
+    // funbox: Config.funbox removed
     currentQuote: TestWords.currentQuote,
   });
 
@@ -897,7 +904,7 @@ function buildCompletedEvent(
     consistency: consistency,
     wpmConsistency: wpmConsistency,
     keyConsistency: keyConsistency,
-    funbox: Config.funbox,
+    // funbox: Config.funbox removed
     bailedOut: TestState.bailedOut,
     chartData: chartData,
     customText: customText,
@@ -1340,7 +1347,7 @@ async function saveResult(
   );
   $("#result .stats .tags .editTagsButton").removeClass("invisible");
 
-  const dataToSave: DB.SaveLocalResultData = {};
+  const dataToSave: any = {};
 
   if (data.xp !== undefined) {
     const snapxp = DB.getSnapshot()?.xp ?? 0;
@@ -1383,7 +1390,7 @@ async function saveResult(
       completedEvent.language,
       completedEvent.difficulty,
       completedEvent.lazyMode,
-      getFunbox(completedEvent.funbox)
+      getFunbox([])
     );
 
     if (localPb !== undefined) {
@@ -1582,12 +1589,7 @@ ConfigEvent.subscribe((eventKey, eventValue, nosave) => {
       restart();
     }
     if (eventKey === "difficulty" && !nosave) restart();
-    if (
-      eventKey === "customLayoutfluid" &&
-      Config.funbox.includes("layoutfluid")
-    ) {
-      restart();
-    }
+    // Config.funbox.includes("layoutfluid") removed
 
     if (
       eventKey === "keymapMode" &&

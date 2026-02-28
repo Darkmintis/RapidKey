@@ -6,12 +6,9 @@ import * as Notifications from "../notifications";
 import * as ThemeColors from "../theme-colors";
 import * as ChartController from "../../controllers/chart-controller";
 import * as Loader from "../loader";
-import * as DB from "../../db";
 import * as ConfigEvent from "../../observables/config-event";
-import { isAuthenticated } from "../../firebase";
 import * as ActivePage from "../../states/active-page";
 import { CustomThemeColors, ThemeName } from "@rapidkey/schemas/configs";
-import { captureException } from "../../sentry";
 import { ThemesListSorted } from "../../constants/themes";
 
 function updateActiveButton(): void {
@@ -128,7 +125,6 @@ export async function fillPresetButtons(): Promise<void> {
     const msg =
       "Failed to fill preset theme buttons: favThemes or allThemes element not found";
     Notifications.add(msg, -1);
-    void captureException(new Error(msg));
     console.error(msg, { favThemesEl, themesEl });
     return;
   }
@@ -221,37 +217,10 @@ export async function fillCustomButtons(): Promise<void> {
     ".pageSettings .section.themes .customThemeEdit #saveCustomThemeButton"
   );
 
-  if (!isAuthenticated()) {
-    saveButton.text("save");
-    addButton.addClass("hidden");
-    customThemesEl.css("margin-bottom", "0");
-    return;
-  }
-
-  saveButton.text("save as new");
-  addButton.removeClass("hidden");
-
-  const customThemes = DB.getSnapshot()?.customThemes ?? [];
-
-  if (customThemes.length === 0) {
-    customThemesEl.css("margin-bottom", "0");
-  } else {
-    customThemesEl.css("margin-bottom", "1rem");
-  }
-
-  for (const customTheme of customThemes) {
-    const bgColor = customTheme.colors[0];
-    const mainColor = customTheme.colors[1];
-
-    customThemesEl.append(
-      `<div class="customTheme button" customThemeId='${customTheme._id}' 
-      style="color:${mainColor};background:${bgColor}">
-      <div class="editButton"><i class="fas fa-pen"></i></div>
-      <div class="text">${customTheme.name.replace(/_/g, " ")}</div>
-      <div class="delButton"><i class="fas fa-trash fa-fw"></i></div>
-      </div>`
-    );
-  }
+  saveButton.text("save");
+  addButton.addClass("hidden");
+  customThemesEl.css("margin-bottom", "0");
+  return;
 }
 
 export function setCustomInputs(noThemeUpdate = false): void {
@@ -341,25 +310,8 @@ $(".pageSettings .section.themes .tabs button").on("click", (e) => {
 });
 
 // Handle click on custom theme button
-$(".pageSettings").on("click", " .section.themes .customTheme.button", (e) => {
-  // Do not apply if user wanted to delete it
-  if ($(e.target).hasClass("delButton")) return;
-  if ($(e.target).hasClass("editButton")) return;
-  const customThemeId = $(e.currentTarget).attr("customThemeId") ?? "";
-  const theme = DB.getSnapshot()?.customThemes?.find(
-    (e) => e._id === customThemeId
-  );
-
-  if (theme === undefined) {
-    //this shouldnt happen but typescript needs this check
-    console.error(
-      "Could not find custom theme in snapshot for id ",
-      customThemeId
-    );
-    return;
-  }
-
-  UpdateConfig.setCustomThemeColors(theme.colors);
+$(".pageSettings").on("click", " .section.themes .customTheme.button", (_e) => {
+  // no custom themes without account
 });
 
 // Handle click on favorite preset theme button
@@ -467,16 +419,6 @@ $(".pageSettings #loadCustomColorsFromPreset").on("click", async () => {
 
 $(".pageSettings #saveCustomThemeButton").on("click", async () => {
   saveCustomThemeColors();
-  if (isAuthenticated()) {
-    const newCustomTheme = {
-      name: "custom",
-      colors: Config.customThemeColors,
-    };
-
-    Loader.show();
-    await DB.addCustomTheme(newCustomTheme);
-    Loader.hide();
-  }
   void fillCustomButtons();
 });
 

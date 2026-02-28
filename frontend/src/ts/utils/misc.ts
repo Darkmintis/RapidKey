@@ -364,7 +364,7 @@ export async function downloadResultsCSV(array: Result<Mode>[]): Promise<void> {
       item.punctuation,
       item.numbers,
       item.language,
-      item.funbox,
+      undefined, // funbox removed
       item.difficulty,
       item.lazyMode,
       item.blindMode,

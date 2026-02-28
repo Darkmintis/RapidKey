@@ -31,15 +31,8 @@ export async function speak(text: string): Promise<void> {
   }
 }
 
-ConfigEvent.subscribe((eventKey, eventValue) => {
-  if (eventKey === "funbox") {
-    if (eventValue === "none") {
-      clear();
-    } else if (eventValue === "tts") {
-      void init();
-    }
-  }
-  if (eventKey === "language" && Config.funbox.includes("tts")) {
+ConfigEvent.subscribe((eventKey) => {
+  if (eventKey === "language") {
     void setLanguage();
   }
 });

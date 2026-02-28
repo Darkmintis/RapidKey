@@ -1,10 +1,8 @@
 import * as Misc from "../utils/misc";
 import * as JSONData from "../utils/json-data";
 import Page from "./page";
-import Ape from "../ape";
 import * as Notifications from "../elements/notifications";
 import * as ChartController from "../controllers/chart-controller";
-import * as ConnectionState from "../states/connection";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import * as Skeleton from "../utils/skeleton";
 import { TypingStats, SpeedHistogram } from "@rapidkey/schemas/public";
@@ -88,39 +86,7 @@ function updateStatsAndHistogram(): void {
 }
 
 async function getStatsAndHistogramData(): Promise<void> {
-  if (speedHistogramResponseData && typingStatsResponseData) {
-    return;
-  }
-
-  if (!ConnectionState.get()) {
-    Notifications.add("Cannot update all time stats - offline", 0);
-    return;
-  }
-
-  const speedStats = await Ape.public.getSpeedHistogram({
-    query: {
-      language: "english",
-      mode: "time",
-      mode2: "60",
-    },
-  });
-  if (speedStats.status === 200) {
-    speedHistogramResponseData = speedStats.body.data;
-  } else {
-    Notifications.add(
-      `Failed to get global speed stats for histogram: ${speedStats.body.message}`,
-      -1
-    );
-  }
-  const typingStats = await Ape.public.getTypingStats();
-  if (typingStats.status === 200) {
-    typingStatsResponseData = typingStats.body.data;
-  } else {
-    Notifications.add(
-      `Failed to get global typing stats: ${speedStats.body.message}`,
-      -1
-    );
-  }
+  // No backend: skip API calls
 }
 
 async function fill(): Promise<void> {

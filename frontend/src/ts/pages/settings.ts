@@ -3,8 +3,6 @@ import Config, * as UpdateConfig from "../config";
 import * as Sound from "../controllers/sound-controller";
 import * as Misc from "../utils/misc";
 import * as Strings from "../utils/strings";
-import * as DB from "../db";
-import * as Funbox from "../test/funbox/funbox";
 import * as TagController from "../controllers/tag-controller";
 import * as PresetController from "../controllers/preset-controller";
 import * as ThemePicker from "../elements/settings/theme-picker";
@@ -13,7 +11,6 @@ import * as ImportExportSettingsModal from "../modals/import-export-settings";
 import * as ConfigEvent from "../observables/config-event";
 import * as ActivePage from "../states/active-page";
 import { PageWithUrlParams } from "./page";
-import { isAuthenticated } from "../firebase";
 import { get as getTypingSpeedUnit } from "../utils/typing-speed-units";
 import SlimSelect from "slim-select";
 import * as Skeleton from "../utils/skeleton";
@@ -21,13 +18,9 @@ import * as CustomBackgroundFilter from "../elements/custom-background-filter";
 import {
   ThemeName,
   CustomLayoutFluid,
-  FunboxName,
   ConfigKeySchema,
   ConfigKey,
 } from "@rapidkey/schemas/configs";
-import { getAllFunboxes, checkCompatibility } from "@rapidkey/funbox";
-import { getActiveFunboxNames } from "../test/funbox/list";
-import { SnapshotPreset } from "../constants/default-snapshot";
 import { LayoutsList } from "../constants/layouts";
 import { DataArrayPartial, Optgroup, OptionOptional } from "slim-select/store";
 import { Theme, ThemesList } from "../constants/themes";
@@ -41,7 +34,6 @@ import { handleConfigInput } from "../elements/input-validation";
 import { Fonts } from "../constants/fonts";
 import * as CustomBackgroundPicker from "../elements/settings/custom-background-picker";
 import * as CustomFontPicker from "../elements/settings/custom-font-picker";
-import * as AuthEvent from "../observables/auth-event";
 
 let settingsInitialized = false;
 
@@ -535,45 +527,7 @@ async function fillSettingsPage(): Promise<void> {
     },
   });
 
-  const funboxEl = document.querySelector(
-    ".pageSettings .section[data-config-name='funbox'] .buttons"
-  ) as HTMLDivElement;
-  let funboxElHTML = "";
-
-  for (const funbox of getAllFunboxes()) {
-    if (funbox.name === "mirror") {
-      funboxElHTML += `<button class="funbox" data-funbox-name="mirror" data-config-value='${
-        funbox.name
-      }' aria-label="${
-        funbox.description
-      }" data-balloon-pos="up" data-balloon-length="fit" style="transform:scaleX(-1);">${funbox.name.replace(
-        /_/g,
-        " "
-      )}</button>`;
-    } else if (funbox.name === "upside_down") {
-      funboxElHTML += `<button class="funbox" data-funbox-name="upside_down" data-config-value='${
-        funbox.name
-      }' aria-label="${
-        funbox.description
-      }" data-balloon-pos="up" data-balloon-length="fit" style="transform:scaleX(-1) scaleY(-1); z-index:1;">${funbox.name.replace(
-        /_/g,
-        " "
-      )}</button>`;
-    } else if (funbox.name === "underscore_spaces") {
-      // Display as "underscore_spaces". Does not replace underscores with spaces.
-      funboxElHTML += `<button class="funbox" data-funbox-name="underscore_spaces" data-config-value='${funbox.name}' aria-label="${funbox.description}" data-balloon-pos="up" data-balloon-length="fit">${funbox.name}</button>`;
-    } else {
-      funboxElHTML += `<button class="funbox" data-funbox-name="${
-        funbox.name
-      }" data-config-value='${funbox.name}' aria-label="${
-        funbox.description
-      }" data-balloon-pos="up" data-balloon-length="fit">${funbox.name.replace(
-        /_/g,
-        " "
-      )}</button>`;
-    }
-  }
-  funboxEl.innerHTML = funboxElHTML;
+  // Funbox section removed (no funbox support)
 
   const fontsEl = document.querySelector(
     ".pageSettings .section[data-config-name='fontFamily'] .buttons"
@@ -724,89 +678,15 @@ function showAccountSection(): void {
 }
 
 function setActiveFunboxButton(): void {
-  const buttons = document.querySelectorAll(
-    `.pageSettings .section[data-config-name='funbox'] button`
-  );
-
-  for (const button of buttons) {
-    button.classList.remove("active");
-    button.classList.remove("disabled");
-
-    const configValue = button.getAttribute("data-config-value");
-    const funboxName = button.getAttribute("data-funbox-name");
-
-    if (configValue === null || funboxName === null) {
-      continue;
-    }
-
-    if (Config.funbox.includes(funboxName as FunboxName)) {
-      button.classList.add("active");
-    } else if (
-      !checkCompatibility(getActiveFunboxNames(), funboxName as FunboxName)
-    ) {
-      button.classList.add("disabled");
-    }
-  }
+  // No-op: funbox removed
 }
 
 function refreshTagsSettingsSection(): void {
-  if (isAuthenticated() && DB.getSnapshot()) {
-    const tagsEl = $(".pageSettings .section.tags .tagsList").empty();
-    DB.getSnapshot()?.tags?.forEach((tag) => {
-      // let tagPbString = "No PB found";
-      // if (tag.pb !== undefined && tag.pb > 0) {
-      //   tagPbString = `PB: ${tag.pb}`;
-      // }
-      tagsEl.append(`
-
-      <div class="buttons tag" data-id="${tag._id}" data-name="${
-        tag.name
-      }" data-display="${tag.display}">
-        <button class="tagButton ${tag.active ? "active" : ""}" active="${
-        tag.active
-      }">
-          ${tag.display}
-        </button>
-        <button class="clearPbButton" aria-label="clear tags personal bests" data-balloon-pos="left" >
-          <i class="fas fa-crown fa-fw"></i>
-        </button>
-        <button class="editButton" aria-label="rename tag" data-balloon-pos="left" >
-          <i class="fas fa-pen fa-fw"></i>
-        </button>
-        <button class="removeButton" aria-label="remove tag"  data-balloon-pos="left" >
-          <i class="fas fa-trash fa-fw"></i>
-        </button>
-      </div>
-
-      `);
-    });
-    $(".pageSettings .section.tags").removeClass("hidden");
-  } else {
-    $(".pageSettings .section.tags").addClass("hidden");
-  }
+  $(".pageSettings .section.tags").addClass("hidden");
 }
 
 function refreshPresetsSettingsSection(): void {
-  if (isAuthenticated() && DB.getSnapshot()) {
-    const presetsEl = $(".pageSettings .section.presets .presetsList").empty();
-    DB.getSnapshot()?.presets?.forEach((preset: SnapshotPreset) => {
-      presetsEl.append(`
-      <div class="buttons preset" data-id="${preset._id}" data-name="${preset.name}" data-display="${preset.display}">
-        <button class="presetButton">${preset.display}</button>
-        <button class="editButton">
-          <i class="fas fa-pen fa-fw"></i>
-        </button>
-        <button class="removeButton">
-          <i class="fas fa-trash fa-fw"></i>
-        </button>
-      </div>
-      
-      `);
-    });
-    $(".pageSettings .section.presets").removeClass("hidden");
-  } else {
-    $(".pageSettings .section.presets").addClass("hidden");
-  }
+  $(".pageSettings .section.presets").addClass("hidden");
 }
 
 export async function updateFilterSectionVisibility(): Promise<void> {
@@ -942,11 +822,7 @@ export async function update(
     Config.customBackground
   );
 
-  if (isAuthenticated()) {
-    showAccountSection();
-  } else {
-    hideAccountSection();
-  }
+  hideAccountSection();
 
   CustomBackgroundFilter.updateUI();
 
@@ -1000,17 +876,6 @@ function toggleSettingsGroup(groupName: string): void {
     );
   }
 }
-
-//funbox
-$(".pageSettings .section[data-config-name='funbox'] .buttons").on(
-  "click",
-  "button",
-  (e) => {
-    const funbox = $(e.currentTarget).attr("data-config-value") as FunboxName;
-    Funbox.toggleFunbox(funbox);
-    setActiveFunboxButton();
-  }
-);
 
 //tags
 $(".pageSettings .section.tags").on(
@@ -1222,16 +1087,6 @@ ConfigEvent.subscribe((eventKey, eventValue) => {
     void (eventKey === "customBackground"
       ? updateFilterSectionVisibility()
       : update({ eventKey }));
-  }
-});
-
-AuthEvent.subscribe((event) => {
-  if (event.type === "authStateChanged") {
-    if (event.data.isUserSignedIn) {
-      showAccountSection();
-    } else {
-      hideAccountSection();
-    }
   }
 });
 

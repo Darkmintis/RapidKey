@@ -4,7 +4,7 @@ import { getMode2 } from "../utils/misc";
 import * as CustomText from "../test/custom-text";
 import { compressToURI } from "lz-ts";
 import AnimatedModal, { ShowOptions } from "../utils/animated-modal";
-import { Difficulty, FunboxName } from "@rapidkey/schemas/configs";
+import { Difficulty } from "@rapidkey/schemas/configs";
 import { Mode, Mode2 } from "@rapidkey/schemas/shared";
 
 function getCheckboxValue(checkbox: string): boolean {
@@ -20,13 +20,12 @@ type SharedTestSettings = [
   boolean | null,
   boolean | null,
   string | null,
-  Difficulty | null,
-  FunboxName[] | null
+  Difficulty | null
 ];
 
 function updateURL(): void {
   const baseUrl = location.origin + "?testSettings=";
-  const settings: SharedTestSettings = new Array(8).fill(
+  const settings: SharedTestSettings = new Array(7).fill(
     null
   ) as SharedTestSettings;
 
@@ -38,7 +37,6 @@ function updateURL(): void {
     { key: "numbers", getValue: () => Config.numbers },
     { key: "language", getValue: () => Config.language },
     { key: "difficulty", getValue: () => Config.difficulty },
-    { key: "funbox", getValue: () => Config.funbox },
   ];
 
   for (const [index, { key, getValue }] of settingsMap.entries()) {

@@ -3,6 +3,9 @@
   "compilerOptions": {
     "moduleResolution": "Bundler",
     "module": "ESNext",
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
     "noEmit": true
   },
   "files": ["vitest.d.ts"],

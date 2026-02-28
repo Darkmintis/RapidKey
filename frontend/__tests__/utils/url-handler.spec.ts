@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Difficulty, Mode, Mode2 } from "@rapidkey/schemas/shared";
-import { compressToURI } from "lz-ts";
 import * as UpdateConfig from "../../src/ts/config";
 import * as Notifications from "../../src/ts/elements/notifications";
 import { CustomTextSettings } from "../../src/ts/test/custom-text";
@@ -8,7 +7,7 @@ import * as TestLogic from "../../src/ts/test/test-logic";
 import * as TestState from "../../src/ts/test/test-state";
 import * as Misc from "../../src/ts/utils/misc";
 import { loadTestSettingsFromUrl } from "../../src/ts/utils/url-handler";
-import { FunboxName } from "@rapidkey/schemas/configs";
+import { compressToURI } from "lz-ts";
 
 //mock modules to avoid dependencies
 vi.mock("../../src/ts/test/test-logic", () => ({
@@ -28,7 +27,6 @@ describe("url-handler", () => {
     const setNumbersMock = vi.spyOn(UpdateConfig, "setNumbers");
     const setLanguageMock = vi.spyOn(UpdateConfig, "setLanguage");
     const setDifficultyMock = vi.spyOn(UpdateConfig, "setDifficulty");
-    const setFunboxMock = vi.spyOn(UpdateConfig, "setFunbox");
 
     const restartTestMock = vi.spyOn(TestLogic, "restart");
     const addNotificationMock = vi.spyOn(Notifications, "add");
@@ -45,7 +43,6 @@ describe("url-handler", () => {
         setNumbersMock,
         setLanguageMock,
         setDifficultyMock,
-        setFunboxMock,
         restartTestMock,
         addNotificationMock,
       ].forEach((it) => it.mockClear());
@@ -165,30 +162,10 @@ describe("url-handler", () => {
       expect(restartTestMock).toHaveBeenCalled();
     });
     it("sets funbox", () => {
-      //GIVEN
-      findGetParameterMock.mockReturnValue(
-        urlData({ funbox: ["crt", "choo_choo"] })
-      );
-
-      //WHEN
-      loadTestSettingsFromUrl("");
-
-      //THEN
-      expect(setFunboxMock).toHaveBeenCalledWith(["crt", "choo_choo"], true);
-      expect(restartTestMock).toHaveBeenCalled();
+      // funbox removed — url-handler ignores it
     });
     it("sets funbox legacy", () => {
-      //GIVEN
-      findGetParameterMock.mockReturnValue(
-        urlData({ funbox: "crt#choo_choo" })
-      );
-
-      //WHEN
-      loadTestSettingsFromUrl("");
-
-      //THEN
-      expect(setFunboxMock).toHaveBeenCalledWith(["crt", "choo_choo"], true);
-      expect(restartTestMock).toHaveBeenCalled();
+      // funbox removed
     });
     it("adds notification", () => {
       //GIVEN
@@ -206,7 +183,6 @@ describe("url-handler", () => {
           numbers: true,
           language: "english",
           difficulty: "master",
-          funbox: ["ascii", "crt"],
         })
       );
 
@@ -215,7 +191,7 @@ describe("url-handler", () => {
 
       //THEN
       expect(addNotificationMock).toHaveBeenCalledWith(
-        "Settings applied from URL:<br><br>mode: time<br>mode2: 60<br>custom text settings<br>punctuation: on<br>numbers: on<br>language: english<br>difficulty: master<br>funbox: ascii, crt<br>",
+        "Settings applied from URL:<br><br>mode: time<br>mode2: 60<br>custom text settings<br>punctuation: on<br>numbers: on<br>language: english<br>difficulty: master<br>",
         1,
         {
           duration: 10,
@@ -264,7 +240,7 @@ const urlData = (
     numbers: boolean;
     language: string;
     difficulty: Difficulty;
-    funbox: FunboxName[] | string;
+    funbox?: string[] | string;
   }>
 ): string => {
   return compressToURI(

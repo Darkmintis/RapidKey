@@ -1,6 +1,5 @@
 import * as Notifications from "./elements/notifications";
 import { ZodSchema, z } from "zod";
-import * as Sentry from "./sentry";
 
 // function isConfigKeyValid(name: string): boolean {
 //   if (name === null || name === undefined || name === "") return false;
@@ -21,7 +20,6 @@ export function invalid(
 
   Notifications.add(message, -1);
   console.error(message);
-  void Sentry.captureException(new Error(message));
 }
 
 export function isConfigValueValid<T>(

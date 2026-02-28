@@ -9,13 +9,7 @@ export type PageName =
   | "test"
   | "settings"
   | "about"
-  | "account"
-  | "login"
-  | "profile"
-  | "profileSearch"
-  | "404"
-  | "accountSettings"
-  | "leaderboards";
+  | "404";
 
 type Options<T> = {
   params?: Record<string, string>;

@@ -1,5 +1,17 @@
-import { QuoteWithTextSplit } from "../controllers/quotes-controller";
 import * as TestState from "./test-state";
+
+// Quote type (quotes-controller removed)
+export type Quote = {
+  text: string;
+  source: string;
+  length: number;
+  id: number;
+  group?: number;
+  language?: string;
+  britishText?: string;
+  textSplit?: string[];
+};
+export type QuoteWithTextSplit = Quote & { textSplit: string[] };
 
 class Words {
   public list: string[];

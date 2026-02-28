@@ -15,8 +15,6 @@ import * as SlowTimer from "../states/slow-timer";
 import * as TestState from "./test-state";
 import * as Time from "../states/time";
 import * as TimerEvent from "../observables/timer-event";
-import * as LayoutfluidFunboxTimer from "../test/funbox/layoutfluid-funbox-timer";
-import { KeymapLayout, Layout } from "@rapidkey/schemas/configs";
 import * as SoundController from "../controllers/sound-controller";
 
 type TimerStats = {
@@ -91,35 +89,7 @@ function calculateAcc(): number {
 }
 
 function layoutfluid(): void {
-  if (timerDebug) console.time("layoutfluid");
-  if (Config.funbox.includes("layoutfluid") && Config.mode === "time") {
-    const layouts = Config.customLayoutfluid;
-    const switchTime = Config.time / layouts.length;
-    const time = Time.get();
-    const index = Math.floor(time / switchTime);
-    const layout = layouts[index];
-    const flooredSwitchTimes = [];
-
-    for (let i = 1; i < layouts.length; i++) {
-      flooredSwitchTimes.push(Math.floor(switchTime * i));
-    }
-
-    if (flooredSwitchTimes.includes(time + 3)) {
-      LayoutfluidFunboxTimer.show();
-      LayoutfluidFunboxTimer.updateTime(3, layouts[index + 1] as string);
-    } else if (flooredSwitchTimes.includes(time + 2)) {
-      LayoutfluidFunboxTimer.updateTime(2, layouts[index + 1] as string);
-    } else if (flooredSwitchTimes.includes(time + 1)) {
-      LayoutfluidFunboxTimer.updateTime(1, layouts[index + 1] as string);
-    }
-
-    if (Config.layout !== layout && layout !== undefined) {
-      LayoutfluidFunboxTimer.hide();
-      UpdateConfig.setLayout(layout as Layout, true);
-      UpdateConfig.setKeymapLayout(layout as KeymapLayout, true);
-    }
-  }
-  if (timerDebug) console.timeEnd("layoutfluid");
+  // no-op: layoutfluid funbox removed
 }
 
 function checkIfFailed(

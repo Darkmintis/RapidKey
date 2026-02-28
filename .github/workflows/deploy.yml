@@ -44,11 +44,11 @@ jobs:
           BASE_PATH: /RapidKey/
 
       - name: Fix SPA routing
-        run: cp dist/index.html dist/404.html
+        run: cp frontend/dist/index.html frontend/dist/404.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: frontend/dist
 
   deploy:
     environment:

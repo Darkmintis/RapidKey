@@ -5,7 +5,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import path from "node:path";
 import childProcess from "child_process";
 import { checker } from "vite-plugin-checker";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 // eslint-disable-next-line import/no-unresolved
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -68,7 +68,8 @@ export default {
       closeBundle() {
         const version = CLIENT_VERSION;
         const versionJson = JSON.stringify({ version });
-        const versionPath = path.resolve(__dirname, "../dist/version.json");
+        const versionPath = path.resolve(__dirname, "dist/version.json");
+        mkdirSync(path.dirname(versionPath), { recursive: true });
         writeFileSync(versionPath, versionJson);
       },
     },
@@ -202,7 +203,7 @@ export default {
 
         // console.log("\n\x1b[1mMinifying JSON files...\x1b[0m\n");
 
-        minifyJsonFiles(path.resolve(__dirname, "../dist"));
+        minifyJsonFiles(path.resolve(__dirname, "dist"));
 
         const totalSavings =
           ((totalOriginalSize - totalMinifiedSize) / totalOriginalSize) * 100;

@@ -74,9 +74,7 @@
   },
   "dependencies": {
     "@date-fns/utc": "1.2.0",
-    "@rapidkey/contracts": "workspace:*",
     "@rapidkey/util": "workspace:*",
-    "@ts-rest/core": "3.52.1",
     "balloon-css": "1.2.0",
     "canvas-confetti": "1.5.1",
     "chart.js": "3.7.1",

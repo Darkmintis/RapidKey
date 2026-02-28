@@ -34,8 +34,8 @@ jobs:
 
       - name: Build packages
         run: |
+          pnpm --filter "@rapidkey/tsup-config" build
           pnpm --filter "@rapidkey/schemas" build
-          pnpm --filter "@rapidkey/contracts" build
           pnpm --filter "@rapidkey/util" build
 
       - name: Build frontend

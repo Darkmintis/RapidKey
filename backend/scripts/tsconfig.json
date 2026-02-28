@@ -1,7 +1,0 @@
-{
-  "extends": "@rapidkey/typescript-config/base.json",
-  "compilerOptions": {
-    "target": "ES6"
-  },
-  "include": ["./**/*"]
-}

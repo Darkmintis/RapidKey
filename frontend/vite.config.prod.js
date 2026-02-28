@@ -68,7 +68,7 @@ export default {
       closeBundle() {
         const version = CLIENT_VERSION;
         const versionJson = JSON.stringify({ version });
-        const versionPath = path.resolve(__dirname, "dist/version.json");
+        const versionPath = path.resolve(__dirname, "../dist/version.json");
         writeFileSync(versionPath, versionJson);
       },
     },
@@ -202,7 +202,7 @@ export default {
 
         // console.log("\n\x1b[1mMinifying JSON files...\x1b[0m\n");
 
-        minifyJsonFiles("./dist");
+        minifyJsonFiles(path.resolve(__dirname, "../dist"));
 
         const totalSavings =
           ((totalOriginalSize - totalMinifiedSize) / totalOriginalSize) * 100;

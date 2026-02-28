@@ -69,13 +69,6 @@ export default defineConfig(({ command }) => {
   }
 });
 
-/** Enable for font awesome v6 */
-/*
-function sassList(values) {
-  return values.map((it) => `"${it}"`).join(",");
-}
-*/
-
 export function getFontsConig() {
   return (
     "\n" +

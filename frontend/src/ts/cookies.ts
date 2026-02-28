@@ -5,7 +5,6 @@ const AcceptedCookiesSchema = z
   .object({
     security: z.boolean(),
     analytics: z.boolean(),
-    sentry: z.boolean(),
   })
   .strict()
   .nullable();

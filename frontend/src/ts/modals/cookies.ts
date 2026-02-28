@@ -36,13 +36,6 @@ function showSettings(currentAcceptedCookies?: AcceptedCookies): void {
           .querySelector(".cookie.analytics input") as HTMLInputElement
       ).checked = true;
     }
-    if (currentAcceptedCookies.sentry) {
-      (
-        modal
-          .getModal()
-          .querySelector(".cookie.sentry input") as HTMLInputElement
-      ).checked = true;
-    }
   }
 }
 
@@ -67,7 +60,6 @@ const modal = new AnimatedModal({
       const accepted = {
         security: true,
         analytics: true,
-        sentry: true,
       };
       setAcceptedCookies(accepted);
       void hide();
@@ -76,7 +68,6 @@ const modal = new AnimatedModal({
       const accepted = {
         security: true,
         analytics: false,
-        sentry: false,
       };
       setAcceptedCookies(accepted);
       void hide();
@@ -89,13 +80,9 @@ const modal = new AnimatedModal({
       const analyticsChecked = (
         modalEl.querySelector(".cookie.analytics input") as HTMLInputElement
       ).checked;
-      const sentryChecked = (
-        modalEl.querySelector(".cookie.sentry input") as HTMLInputElement
-      ).checked;
       const accepted = {
         security: true,
         analytics: analyticsChecked,
-        sentry: sentryChecked,
       };
       setAcceptedCookies(accepted);
       void hide();

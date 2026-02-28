@@ -2,7 +2,6 @@ import { fontawesomeSubset } from "fontawesome-subset";
 import { getFontawesomeConfig } from "./scripts/fontawesome";
 import { generatePreviewFonts } from "./scripts/font-preview";
 import { VitePWA } from "vite-plugin-pwa";
-import replace from "vite-plugin-filter-replace";
 import path from "node:path";
 import childProcess from "child_process";
 import { checker } from "vite-plugin-checker";
@@ -11,7 +10,6 @@ import { writeFileSync } from "fs";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { ViteMinifyPlugin } from "vite-plugin-minify";
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { getFontsConig } from "./vite.config";
 
 function pad(numbers, maxLength, fillString) {
@@ -94,7 +92,7 @@ export default {
       manifest: {
         short_name: "RapidKey",
         name: "RapidKey",
-        start_url: "/",
+        start_url: process.env.BASE_PATH || "/",
         icons: [
           {
             src: "/images/icons/maskable_icon_x512.png",
@@ -140,33 +138,6 @@ export default {
         ],
       },
     }),
-    process.env.SENTRY
-      ? sentryVitePlugin({
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          org: "rapidkey",
-          project: "frontend",
-          release: {
-            name: CLIENT_VERSION,
-          },
-          applicationKey: "rapidkey-frontend",
-        })
-      : null,
-    replace([
-      {
-        filter: ["src/ts/firebase.ts"],
-        replace: {
-          from: `"./constants/firebase-config"`,
-          to: `"./constants/firebase-config-live"`,
-        },
-      },
-      {
-        filter: ["src/email-handler.html"],
-        replace: {
-          from: `"./ts/constants/firebase-config"`,
-          to: `"./ts/constants/firebase-config-live"`,
-        },
-      },
-    ]),
     UnpluginInjectPreload({
       files: [
         {
@@ -253,15 +224,15 @@ export default {
       },
     },
   ],
+  base: process.env.BASE_PATH || "/",
   build: {
-    sourcemap: process.env.SENTRY,
+    sourcemap: false,
     emptyOutDir: true,
     outDir: "../dist",
     assetsInlineLimit: 0, //dont inline small files as data
     rollupOptions: {
       input: {
         rapidkey: path.resolve(__dirname, "src/index.html"),
-        email: path.resolve(__dirname, "src/email-handler.html"),
         privacy: path.resolve(__dirname, "src/privacy-policy.html"),
         security: path.resolve(__dirname, "src/security-policy.html"),
         terms: path.resolve(__dirname, "src/terms-of-service.html"),
@@ -281,14 +252,8 @@ export default {
         chunkFileNames: "js/[name].[hash].js",
         entryFileNames: "js/[name].[hash].js",
         manualChunks: (id) => {
-          if (id.includes("@sentry")) {
-            return "vendor-sentry";
-          }
           if (id.includes("jquery")) {
             return "vendor-jquery";
-          }
-          if (id.includes("@firebase")) {
-            return "vendor-firebase";
           }
           if (id.includes("rapidkey/packages")) {
             return "rapidkey-packages";
@@ -301,12 +266,8 @@ export default {
     },
   },
   define: {
-    BACKEND_URL: JSON.stringify(
-      process.env.BACKEND_URL || "https://api.rapidkey.com"
-    ),
     IS_DEVELOPMENT: JSON.stringify(false),
     CLIENT_VERSION: JSON.stringify(CLIENT_VERSION),
-    RECAPTCHA_SITE_KEY: JSON.stringify(process.env.RECAPTCHA_SITE_KEY),
     QUICK_LOGIN_EMAIL: undefined,
     QUICK_LOGIN_PASSWORD: undefined,
   },

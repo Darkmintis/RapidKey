@@ -38,7 +38,7 @@ const BASE_CONFIG = {
   server: {
     open: process.env.SERVER_OPEN !== "false",
     port: 3000,
-    host: process.env.BACKEND_URL !== undefined,
+    host: false,
     watch: {
       //we rebuild the whole contracts package when a file changes
       //so we only want to watch one file
@@ -63,9 +63,6 @@ const BASE_CONFIG = {
 
 export default defineConfig(({ command }) => {
   if (command === "build") {
-    if (process.env.RECAPTCHA_SITE_KEY === undefined) {
-      throw new Error(".env: RECAPTCHA_SITE_KEY is not defined");
-    }
     return mergeConfig(BASE_CONFIG, PROD_CONFIG);
   } else {
     return mergeConfig(BASE_CONFIG, DEV_CONFIG);

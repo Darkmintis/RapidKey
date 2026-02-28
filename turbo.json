@@ -19,10 +19,6 @@
       "dependsOn": ["^build"],
       "cache": false
     },
-    "integration-test": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
     "dev": {
       "dependsOn": ["^build"],
       "persistent": true,
@@ -36,17 +32,10 @@
     },
     "@rapidkey/frontend#build": {
       "dependsOn": ["^build"],
-      "env": ["BACKEND_URL", "RECAPTCHA_SITE_KEY", "SENTRY"],
       "outputs": ["dist/**"]
     },
     "@rapidkey/frontend#dev": {
       "dependsOn": ["^build"],
-      "env": ["BACKEND_URL", "RECAPTCHA_SITE_KEY", "SERVER_OPEN"],
-      "persistent": true
-    },
-    "@rapidkey/backend#dev": {
-      "dependsOn": ["^build"],
-      "env": ["DB_URI", "REDIS_URI", "PORT"],
       "persistent": true
     }
   }

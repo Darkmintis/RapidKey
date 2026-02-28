@@ -15,8 +15,6 @@
     "madge": " madge --circular --extensions ts ./src",
     "start": "vite preview --port 3000",
     "dev": "vite dev",
-    "deploy": "npm run check-assets && npm run build && vercel --prod",
-    "deploy-preview": "npm run check-assets && npm run build && vercel",
     "test": "vitest run",
     "test-coverage": "vitest run --coverage",
     "dev-test": "concurrently --kill-others \"vite dev\" \"vitest\"",

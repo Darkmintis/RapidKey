@@ -1,5 +1,4 @@
-﻿import { envConfig } from "../constants/env-config";
-import AnimatedModal from "../utils/animated-modal";
+﻿import AnimatedModal from "../utils/animated-modal";
 import * as Notifications from "../elements/notifications";
 import { setMediaQueryDebugLevel } from "../ui";
 import * as Loader from "../elements/loader";
@@ -56,13 +55,9 @@ const modal = new AnimatedModal({
 });
 
 export function appendButton(): void {
-  $("body").prepend(
-    `<div id="devButtons">
-      <a class='button configureAPI' href='${envConfig.backendUrl}/configure/' target='_blank' aria-label="Configure API" data-balloon-pos="right">
-        <i class="fas fa-fw fa-server"></i></a>
+  $(`<div id="devButtons">
       <button class='button showDevOptionsModal' aria-label="Dev options" data-balloon-pos="right"><i class="fas fa-fw fa-flask"></i></button>
-    </div>`
-  );
+    </div>`).prependTo("body");
   document
     .querySelector("#devButtons .button.showDevOptionsModal")
     ?.addEventListener("click", () => {

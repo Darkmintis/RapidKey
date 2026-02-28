@@ -8,8 +8,8 @@ const obj = {
   customTheme: false,
   customThemeColors: [
     "#323437",
-    "#e2b714",
-    "#e2b714",
+    "#ff3636",
+    "#ff3636",
     "#646669",
     "#2c2e31",
     "#d1d0c5",

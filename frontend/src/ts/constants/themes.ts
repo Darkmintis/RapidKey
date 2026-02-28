@@ -54,13 +54,13 @@ export const themes: Record<ThemeName, Omit<Theme, "name">> = {
   },
   serika: {
     bgColor: "#e1e1e3",
-    mainColor: "#e2b714",
+    mainColor: "#ff3636",
     subColor: "#aaaeb3",
     textColor: "#323437",
   },
   serika_dark: {
     bgColor: "#323437",
-    mainColor: "#e2b714",
+    mainColor: "#ff3636",
     subColor: "#646669",
     textColor: "#d1d0c5",
   },
@@ -88,10 +88,10 @@ export const ThemesList: Theme[] = Object.keys(themes)
   .sort()
   .map(
     (it) =>
-      ({
-        ...themes[it as ThemeName],
-        name: it,
-      } as Theme)
+    ({
+      ...themes[it as ThemeName],
+      name: it,
+    } as Theme)
   );
 
 export const ThemesListSorted = [

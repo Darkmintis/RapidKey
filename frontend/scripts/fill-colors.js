@@ -39,13 +39,6 @@ function main() {
       listFile.find(
         (theme) => theme.name === filename.split(".css")[0]
       ).mainColor = mainMatches[1];
-
-      // console.log(themeData);
-
-      // fs.writeFileSync(
-      //   `../static/quotes/${filename}.json`,
-      //   JSON.stringify(quoteData, null, 2)
-      // );
     }
     fs.writeFileSync(
       `../static/themes/_list.json`,

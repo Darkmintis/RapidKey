@@ -29,5 +29,4 @@ const cookies = new LocalStorageWithSchema({
 });
 
 export function activateWhatsAccepted(): void {
-  // analytics and sentry removed
 }

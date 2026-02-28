@@ -88,7 +88,6 @@ const ConnectionState = { get: (): false => false, showOfflineBanner: () => {} }
 const MemoryFunboxTimer = { reset: () => {} };
 const LayoutfluidFunboxTimer = { hide: () => {} };
 const XPBar = { skipBreakdown: async () => {}, update: async (..._args: any[]) => {} };
-const Sentry = { captureException: (_e: any) => {} };
 
 let failReason = "";
 const koInputVisual = document.getElementById("koInputVisual") as HTMLElement;
@@ -422,7 +421,7 @@ async function init(): Promise<boolean> {
   testReinitCount++;
   if (testReinitCount > 3) {
     if (lastInitError) {
-      void Sentry.captureException(lastInitError);
+      console.error(lastInitError);
       TestInitFailed.showError(
         `${lastInitError.name}: ${lastInitError.message}`
       );

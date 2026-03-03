@@ -46,10 +46,6 @@ export const Fonts: Record<KnownFontName, FontConfig> = {
   Lexend_Deca: {
     fileName: "LexendDeca-Regular.woff2",
   },
-  Comic_Sans_MS: {
-    display: "Helvetica",
-    systemFont: true,
-  },
   Oxygen: {
     fileName: "Oxygen-Regular.woff2",
   },
@@ -57,26 +53,11 @@ export const Fonts: Record<KnownFontName, FontConfig> = {
     fileName: "Nunito-Bold.woff2",
     weight: 700,
   },
-  Itim: {
-    fileName: "Itim-Regular.woff2",
-  },
-  Courier: {
-    systemFont: true,
-  },
-  Comfortaa: {
-    fileName: "Comfortaa-Regular.woff2",
-  },
-  Coming_Soon: {
-    fileName: "ComingSoon-Regular.woff2",
-  },
   Atkinson_Hyperlegible: {
     fileName: "AtkinsonHyperlegible-Regular.woff2",
   },
   Lato: {
     fileName: "Lato-Regular.woff2",
-  },
-  Lalezar: {
-    fileName: "Lalezar-Regular.woff2",
   },
   Open_Dyslexic: {
     fileName: "OpenDyslexic-Regular.woff2",
@@ -87,17 +68,11 @@ export const Fonts: Record<KnownFontName, FontConfig> = {
   Ubuntu_Mono: {
     fileName: "UbuntuMono-Regular.woff2",
   },
-  Georgia: {
-    systemFont: true,
-  },
   Cascadia_Mono: {
     fileName: "CascadiaMono-Regular.woff2",
   },
   IBM_Plex_Mono: {
     fileName: "IBMPlexMono-Regular.woff2",
-  },
-  Parkinsans: {
-    fileName: "Parkinsans-Regular.woff2",
   },
   Geist: {
     fileName: "Geist-Medium.woff2",

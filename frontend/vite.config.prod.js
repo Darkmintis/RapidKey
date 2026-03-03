@@ -96,13 +96,13 @@ export default {
         start_url: process.env.BASE_PATH || "/",
         icons: [
           {
-            src: "/images/icons/maskable_icon_x512.png",
+            src: "images/icons/maskable_icon_x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "/images/icons/general_icon_x512.png",
+            src: "images/icons/general_icon_x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",

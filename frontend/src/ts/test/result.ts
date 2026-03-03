@@ -955,11 +955,6 @@ export async function update(
   $("#words").removeClass("blurred");
   $("#wordsInput").trigger("blur");
   $("#result .stats .time .bottom .afk").text("");
-  if (isAuthenticated()) {
-    $("#result .loginTip").addClass("hidden");
-  } else {
-    $("#result .loginTip").removeClass("hidden");
-  }
   if (Config.ads === "off" || Config.ads === "result") {
     $("#result #watchVideoAdButton").addClass("hidden");
   } else {
@@ -1024,9 +1019,6 @@ export async function update(
     $("main #result .stats").removeClass("hidden");
     $("main #result .chart").removeClass("hidden");
     // $("main #result #resultWordsHistory").removeClass("hidden");
-    if (!isAuthenticated()) {
-      $("main #result .loginTip").removeClass("hidden");
-    }
     $("main #result #showWordHistoryButton").removeClass("hidden");
     $("main #result #watchReplayButton").removeClass("hidden");
     $("main #result #saveScreenshotButton").removeClass("hidden");

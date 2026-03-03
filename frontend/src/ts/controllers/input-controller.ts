@@ -781,9 +781,6 @@ async function handleTab(
     // dont do anything special
     if (modalVisible) return;
 
-    // dont do anything on login so we can tab/esc between inputs
-    if ((ActivePage.get() as string) === "login") return;
-
     event.preventDefault();
     // insert tab character if needed (only during the test)
     if (!TestState.resultVisible && shouldInsertTabCharacter) {
@@ -794,9 +791,6 @@ async function handleTab(
   } else if (Config.quickRestart === "tab") {
     // dont do anything special
     if (modalVisible) return;
-
-    // dont do anything on login so we can tab/esc betweeen inputs
-    if ((ActivePage.get() as string) === "login") return;
 
     // change page if not on test page
     if (ActivePage.get() !== "test") {

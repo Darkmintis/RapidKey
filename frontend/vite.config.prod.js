@@ -41,12 +41,6 @@ const CLIENT_VERSION = (() => {
   }
 })();
 
-/** Enable for font awesome v6 */
-/*
-function sassList(values) {
-  return values.map((it) => `"${it}"`).join(",");
-}
-*/
 
 /** @type {import("vite").UserConfig} */
 export default {
@@ -189,20 +183,9 @@ export default {
               totalMinifiedSize += minifiedSize;
 
               writeFileSync(sourcePath, minifiedContent);
-
-              // const savings =
-              //   ((originalSize - minifiedSize) / originalSize) * 100;
-              // console.log(
-              //   `\x1b[0m \x1b[36m${sourcePath}\x1b[0m | ` +
-              //     `\x1b[90mOriginal: ${originalSize} bytes\x1b[0m | ` +
-              //     `\x1b[90mMinified: ${minifiedSize} bytes\x1b[0m | ` +
-              //     `\x1b[32mSavings: ${savings.toFixed(2)}%\x1b[0m`
-              // );
             }
           });
         };
-
-        // console.log("\n\x1b[1mMinifying JSON files...\x1b[0m\n");
 
         minifyJsonFiles(path.resolve(__dirname, "dist"));
 

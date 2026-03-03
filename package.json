@@ -46,8 +46,7 @@
     "check-assets": "turbo check-assets --filter @rapidkey/frontend",
     "check-assets-quotes": "turbo check-assets --filter @rapidkey/frontend  -- quotes",
     "check-assets-languages": "turbo check-assets --filter @rapidkey/frontend  -- languages",
-    "check-assets-others": "turbo check-assets --filter @rapidkey/frontend  -- others",
-    "knip": "knip"
+    "check-assets-others": "turbo check-assets --filter @rapidkey/frontend  -- others"
   },
   "engines": {
     "node": "20.18.0"

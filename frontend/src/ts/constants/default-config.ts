@@ -39,7 +39,6 @@ const obj = {
   paceCaretStyle: "default",
   flipTestColors: false,
   layout: "default",
-  funbox: [],
   confidenceMode: "off",
   indicateTypos: "off",
   timerStyle: "mini",

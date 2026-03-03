@@ -215,7 +215,7 @@ type GithubRelease = {
 export async function getLatestReleaseFromGitHub(): Promise<string> {
   type releaseType = { name: string };
   const releases = await cachedFetchJson<releaseType[]>(
-    "https://api.github.com/repos/rapidkeygame/rapidkey/releases?per_page=1"
+    "https://api.github.com/repos/Darkmintis/RapidKey/releases?per_page=1"
   );
   if (releases[0] === undefined || releases[0].name === undefined) {
     throw new Error("No release found");
@@ -229,6 +229,6 @@ export async function getLatestReleaseFromGitHub(): Promise<string> {
  */
 export async function getReleasesFromGitHub(): Promise<GithubRelease[]> {
   return cachedFetchJson(
-    "https://api.github.com/repos/rapidkeygame/rapidkey/releases?per_page=5"
+    "https://api.github.com/repos/Darkmintis/RapidKey/releases?per_page=5"
   );
 }

@@ -28,8 +28,9 @@ $(async (): Promise<void> => {
   } else {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
+        const base = import.meta.env.BASE_URL;
         navigator.serviceWorker
-          .register("/sw.js", { scope: "/" })
+          .register(`${base}sw.js`, { scope: base })
           .then((registration) => {
             console.log(
               "ServiceWorker registration successful with scope: ",

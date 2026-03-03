@@ -4,7 +4,6 @@
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white)](https://vitejs.dev/)
 [![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)](https://sass-lang.com/)
-[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 [![PNPM](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![Turborepo](https://img.shields.io/badge/-Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)](https://turborepo.org/)
 [![Zod](https://img.shields.io/badge/-Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)](https://zod.dev/)
@@ -18,7 +17,7 @@
 
 ## About
 
-RapidKey is a **desktop typing speed test** with a single goal: open it and start typing immediately. No account creation, no server setup, no Firebase — everything is stored locally in your browser.
+RapidKey is a **desktop typing speed test** with a single goal: open it and start typing immediately. No account creation, no server setup, no Firebase - everything is stored locally in your browser.
 
 ### What Makes RapidKey Different?
 

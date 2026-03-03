@@ -27,10 +27,7 @@ function initializeCache(): void {
     "#bannerCenter",
     "#notificationCenter",
     "#capsWarning",
-    "#ad-vertical-right-wrapper",
-    "#ad-vertical-left-wrapper",
     "#ad-footer-wrapper",
-    "#ad-footer-small-wrapper",
   ].join(",");
 
   cache.cursor = [...document.querySelectorAll<HTMLElement>(cursorSelector)];

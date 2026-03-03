@@ -5,6 +5,12 @@ import { LayoutObject } from "@rapidkey/schemas/layouts";
 //pin implementation
 const fetch = window.fetch;
 
+// Prepend Vite base URL for site-relative paths (e.g. /themes/x.css → /RapidKey/themes/x.css)
+const basePath = import.meta.env.BASE_URL;
+function withBase(url: string): string {
+  return url.startsWith("/") ? basePath + url.slice(1) : url;
+}
+
 /**
  * Fetches JSON data from the specified URL using the fetch API.
  * @param url - The URL to fetch the JSON data from.
@@ -12,9 +18,10 @@ const fetch = window.fetch;
  * @throws {Error} If the URL is not provided or if the fetch request fails.
  */
 async function fetchJson<T>(url: string): Promise<T> {
+  const resolvedUrl = withBase(url);
   try {
-    if (!url) throw new Error("No URL");
-    const res = await fetch(url);
+    if (!resolvedUrl) throw new Error("No URL");
+    const res = await fetch(resolvedUrl);
     if (res.ok) {
       if (!res.headers.get("content-type")?.startsWith("application/json")) {
         throw new Error("Content is not JSON");
@@ -24,7 +31,7 @@ async function fetchJson<T>(url: string): Promise<T> {
       throw new Error(`${res.status} ${res.statusText}`);
     }
   } catch (e) {
-    console.error("Error fetching JSON: " + url, e);
+    console.error("Error fetching JSON: " + resolvedUrl, e);
     throw e;
   }
 }
@@ -163,72 +170,12 @@ export async function getContributorsList(): Promise<string[]> {
   return data;
 }
 
-type GithubRelease = {
-  url: string;
-  assets_url: string;
-  upload_url: string;
-  html_url: string;
-  id: number;
-  author: {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    url: string;
-    html_url: string;
-    followers_url: string;
-    following_url: string;
-    gists_url: string;
-    starred_url: string;
-    subscriptions_url: string;
-    organizations_url: string;
-    repos_url: string;
-    events_url: string;
-    received_events_url: string;
-    type: string;
-    site_admin: boolean;
-  };
-  node_id: string;
-  tag_name: string;
-  target_commitish: string;
-  name: string;
-  draft: boolean;
-  prerelease: boolean;
-  created_at: string;
-  published_at: string;
-  assets: unknown[];
-  tarball_url: string;
-  zipball_url: string;
-  body: string;
-  reactions: {
-    url: string;
-    total_count: number;
-    [reaction: string]: number | string;
-  };
-};
-
 /**
- * Fetches the latest release name from GitHub.
- * @returns A promise that resolves to the latest release name.
+ * Fetches the current version from the deployed version.json file.
+ * @returns A promise that resolves to the version string.
  */
-export async function getLatestReleaseFromGitHub(): Promise<string> {
-  type releaseType = { name: string };
-  const releases = await cachedFetchJson<releaseType[]>(
-    "https://api.github.com/repos/Darkmintis/RapidKey/releases?per_page=1"
-  );
-  if (releases[0] === undefined || releases[0].name === undefined) {
-    throw new Error("No release found");
-  }
-  return releases[0].name;
-}
-
-/**
- * Fetches the list of releases from GitHub.
- * @returns A promise that resolves to the list of releases.
- */
-export async function getReleasesFromGitHub(): Promise<GithubRelease[]> {
-  return cachedFetchJson(
-    "https://api.github.com/repos/Darkmintis/RapidKey/releases?per_page=5"
-  );
+export async function getVersionJson(): Promise<string> {
+  const data = await cachedFetchJson<{ version: string }>("/version.json");
+  if (!data?.version) throw new Error("No version found in version.json");
+  return data.version;
 }

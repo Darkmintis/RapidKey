@@ -116,10 +116,11 @@ export async function loadStyle(name: string): Promise<void> {
       $("#keymap .keymapKey").stop(true, true).removeAttr("style");
       resolve();
     };
+    const base = import.meta.env.BASE_URL;
     if (name === "custom") {
-      link.href = `/themes/serika_dark.css`;
+      link.href = `${base}themes/serika_dark.css`;
     } else {
-      link.href = `/themes/${name}.css`;
+      link.href = `${base}themes/${name}.css`;
     }
 
     if (headScript === null) {

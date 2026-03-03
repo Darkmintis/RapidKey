@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getLatestReleaseFromGitHub } from "../utils/json-data";
+import { getVersionJson } from "../utils/json-data";
 import { LocalStorageWithSchema } from "../utils/local-storage-with-schema";
 import { tryCatch } from "@rapidkey/util/trycatch";
 import { createErrorMessage } from "../utils/misc";
@@ -22,9 +22,7 @@ function getMemory(): string {
 }
 
 async function check(): Promise<void> {
-  const { data: currentVersion, error } = await tryCatch(
-    getLatestReleaseFromGitHub()
-  );
+  const { data: currentVersion, error } = await tryCatch(getVersionJson());
 
   if (error) {
     const msg = createErrorMessage(

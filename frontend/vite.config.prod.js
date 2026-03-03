@@ -90,6 +90,7 @@ export default {
       // injectRegister: "networkfirst",
       injectRegister: null,
       registerType: "autoUpdate",
+      scope: process.env.BASE_PATH || "/",
       manifest: {
         short_name: "RapidKey",
         name: "RapidKey",
@@ -131,7 +132,7 @@ export default {
           {
             urlPattern: (options) => {
               //disable caching for version.json
-              return options.url.pathname === "/version.json";
+              return options.url.pathname.endsWith("/version.json");
             },
             handler: "NetworkOnly",
             options: {},

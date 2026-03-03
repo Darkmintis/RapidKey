@@ -241,38 +241,42 @@ export async function change(
   updateOpenGraphUrl();
   Focus.set(false);
 
-  //next page
-  console.log(`page-controller: running beforeShow for ${pageName}`);
-  await nextPage?.beforeShow({
-    params: options.params,
-    data: options.data as never,
-  });
-  console.log(`page-controller: beforeShow done, animating ${pageName} to visible`);
-
-  if (
-    typeof nextPageLoadingMode === "object" &&
-    nextPageLoadingMode.mode === "async"
-  ) {
-    nextPageLoadingMode.beforeLoading();
-    void nextPage?.loadingOptions?.loadingPromise().then(() => {
-      nextPageLoadingMode.afterLoading();
+  try {
+    //next page
+    console.log(`page-controller: running beforeShow for ${pageName}`);
+    await nextPage?.beforeShow({
+      params: options.params,
+      data: options.data as never,
     });
+    console.log(`page-controller: beforeShow done, animating ${pageName} to visible`);
+
+    if (
+      typeof nextPageLoadingMode === "object" &&
+      nextPageLoadingMode.mode === "async"
+    ) {
+      nextPageLoadingMode.beforeLoading();
+      void nextPage?.loadingOptions?.loadingPromise().then(() => {
+        nextPageLoadingMode.afterLoading();
+      });
+    }
+
+    nextPage.element.removeClass("hidden").css("opacity", 0);
+    await Misc.promiseAnimation(
+      nextPage.element,
+      {
+        opacity: "1",
+      },
+      totalDuration / 2,
+      easingMethod
+    );
+    nextPage.element.addClass("active");
+    console.log(`page-controller: ${pageName} page now active and visible`);
+    await nextPage?.afterShow();
+    return true;
+  } catch (e) {
+    console.error(`page-controller: error showing ${pageName}:`, e);
+    return false;
+  } finally {
+    PageTransition.set(false);
   }
-
-  nextPage.element.removeClass("hidden").css("opacity", 0);
-  await Misc.promiseAnimation(
-    nextPage.element,
-    {
-      opacity: "1",
-    },
-    totalDuration / 2,
-    easingMethod
-  );
-  nextPage.element.addClass("active");
-  console.log(`page-controller: ${pageName} page now active and visible`);
-  await nextPage?.afterShow();
-
-  //wrapup
-  PageTransition.set(false);
-  return true;
 }

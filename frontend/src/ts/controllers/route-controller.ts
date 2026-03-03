@@ -91,14 +91,10 @@ export async function navigate(
 ): Promise<void> {
   if (
     !options.force &&
-    (TestState.testRestarting ||
-      TestUI.resultCalculating ||
-      PageTransition.get())
+    (TestUI.resultCalculating || PageTransition.get())
   ) {
     console.debug(
-      `navigate: ${url} ignored, page is busy (testRestarting: ${
-        TestState.testRestarting
-      }, resultCalculating: ${
+      `navigate: ${url} ignored, page is busy (resultCalculating: ${
         TestUI.resultCalculating
       }, pageTransition: ${PageTransition.get()})`
     );

@@ -1,30 +1,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!--  created with Free Online Sitemap Generator www.xml-sitemaps.com  -->
 <url>
-  <loc>https://rapidkey.com/</loc>
+  <loc>https://darkmintis.github.io/RapidKey/</loc>
 </url>
 <url>
-  <loc>https://rapidkey.com/about</loc>
+  <loc>https://darkmintis.github.io/RapidKey/about</loc>
 </url>
 <url>
-  <loc>https://rapidkey.com/settings</loc>
+  <loc>https://darkmintis.github.io/RapidKey/settings</loc>
 </url>
 <url>
-  <loc>https://rapidkey.com/account</loc>
+  <loc>https://darkmintis.github.io/RapidKey/terms-of-service.html</loc>
 </url>
 <url>
-  <loc>https://rapidkey.com/profile</loc>
-</url>
-<url>
-  <loc>https://rapidkey.com/login</loc>
-</url>
-<url>
-  <loc>https://rapidkey.com/terms-of-service</loc>
-</url>
-<url>
-  <loc>https://rapidkey.com/security-policy</loc>
-</url>
-<url>
-  <loc>https://rapidkey.com/privacy-policy</loc>
+  <loc>https://darkmintis.github.io/RapidKey/privacy-policy.html</loc>
 </url>
 </urlset>

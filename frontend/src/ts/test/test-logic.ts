@@ -389,26 +389,23 @@ export function restart(options = {} as RestartOptions): void {
       if (isWordsFocused) OutOfFocus.hide();
       TestUI.focusWords(true);
 
-      console.log("restart: init succeeded, animating #typingTest to visible");
-      $("#typingTest")
-        .css("opacity", 0)
-        .removeClass("hidden")
-        .stop(true, true)
-        .animate(
-          {
-            opacity: 1,
-          },
-          animationTime,
-          () => {
-            TimerProgress.reset();
-            LiveSpeed.reset();
-            LiveAcc.reset();
-            LiveBurst.reset();
-            TestUI.updatePremid();
-            ManualRestart.reset();
-            TestState.setTestRestarting(false);
-          }
-        );
+      // Reset state immediately — never block navigation waiting on animation
+      TimerProgress.reset();
+      LiveSpeed.reset();
+      LiveAcc.reset();
+      LiveBurst.reset();
+      TestUI.updatePremid();
+      ManualRestart.reset();
+      TestState.setTestRestarting(false);
+
+      console.log("restart: init succeeded, showing #typingTest");
+      $("#typingTest").removeClass("hidden").css("opacity", 1);
+      if (animationTime > 0) {
+        $("#typingTest")
+          .css("opacity", 0)
+          .stop(true, true)
+          .animate({ opacity: 1 }, animationTime);
+      }
     } catch (e) {
       console.error("Test restart failed:", e);
       TestState.setTestRestarting(false);
@@ -439,13 +436,6 @@ async function init(): Promise<boolean> {
     TestState.setTestRestarting(false);
     TestState.setTestInitSuccess(false);
     Focus.set(false);
-    // Notifications.add(
-    //   "Too many test reinitialization attempts. Something is going very wrong. Please contact support.",
-    //   -1,
-    //   {
-    //     important: true,
-    //   }
-    // );
     return false;
   }
 

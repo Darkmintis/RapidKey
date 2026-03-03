@@ -219,7 +219,6 @@ export default {
       input: {
         rapidkey: path.resolve(__dirname, "src/index.html"),
         privacy: path.resolve(__dirname, "src/privacy-policy.html"),
-        security: path.resolve(__dirname, "src/security-policy.html"),
         terms: path.resolve(__dirname, "src/terms-of-service.html"),
         404: path.resolve(__dirname, "src/404.html"),
       },

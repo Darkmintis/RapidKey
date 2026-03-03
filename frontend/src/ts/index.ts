@@ -15,7 +15,6 @@ import * as TestTimer from "./test/test-timer";
 import * as Result from "./test/result";
 import { enable } from "./states/glarses-mode";
 import "./test/caps-warning";
-import * as CookiesModal from "./modals/cookies";
 import "./controllers/input-controller";
 import "./ready";
 import "./controllers/route-controller";
@@ -56,10 +55,10 @@ Focus.set(true, true);
 
 const accepted = Cookies.getAcceptedCookies();
 if (accepted === null) {
-  CookiesModal.show();
-} else {
-  Cookies.activateWhatsAccepted();
+  // Auto-accept cookies since we removed all analytics/Firebase
+  Cookies.setAcceptedCookies({ security: true, analytics: false });
 }
+Cookies.activateWhatsAccepted();
 
 addToGlobal({
   config: Config,

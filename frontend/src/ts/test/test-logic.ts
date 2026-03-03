@@ -389,6 +389,7 @@ export function restart(options = {} as RestartOptions): void {
       if (isWordsFocused) OutOfFocus.hide();
       TestUI.focusWords(true);
 
+      console.log("restart: init succeeded, animating #typingTest to visible");
       $("#typingTest")
         .css("opacity", 0)
         .removeClass("hidden")
@@ -542,7 +543,7 @@ async function init(): Promise<boolean> {
     console.debug("Custom text", CustomText.getData());
   }
 
-  console.log("Inializing test", {
+  console.log("Initializing test", {
     language: {
       ...language,
       words: `${language.words.length} words`,
@@ -638,11 +639,7 @@ async function init(): Promise<boolean> {
   );
 
   TestUI.showWords();
-  console.debug("Test initialized with words", generatedWords);
-  console.debug(
-    "Test initialized with section indexes",
-    generatedSectionIndexes
-  );
+  console.log("Test initialized with", generatedWords.length, "words");
   return true;
 }
 

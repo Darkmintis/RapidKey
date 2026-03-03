@@ -3,7 +3,9 @@ import * as MonkeyPower from "./elements/monkey-power";
 import { loadPromise } from "./config";
 
 $(async (): Promise<void> => {
+  console.log("ready: waiting for config loadPromise");
   await loadPromise;
+  console.log("ready: config loaded, showing #app");
 
   //this line goes back to pretty much the beginning of the project and im pretty sure its here
   //to make sure the initial theme application doesnt animate the background color
@@ -13,7 +15,9 @@ $(async (): Promise<void> => {
     .css("opacity", "0")
     .removeClass("hidden")
     .stop(true, true)
-    .animate({ opacity: 1 }, Misc.applyReducedMotion(250));
+    .animate({ opacity: 1 }, Misc.applyReducedMotion(250), () => {
+      console.log("ready: #app is now fully visible");
+    });
 
   MonkeyPower.init();
 

@@ -242,10 +242,12 @@ export async function change(
   Focus.set(false);
 
   //next page
+  console.log(`page-controller: running beforeShow for ${pageName}`);
   await nextPage?.beforeShow({
     params: options.params,
     data: options.data as never,
   });
+  console.log(`page-controller: beforeShow done, animating ${pageName} to visible`);
 
   if (
     typeof nextPageLoadingMode === "object" &&
@@ -267,6 +269,7 @@ export async function change(
     easingMethod
   );
   nextPage.element.addClass("active");
+  console.log(`page-controller: ${pageName} page now active and visible`);
   await nextPage?.afterShow();
 
   //wrapup

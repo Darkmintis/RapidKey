@@ -800,14 +800,24 @@ export async function reset(): Promise<void> {
 
 export async function loadFromLocalStorage(): Promise<void> {
   console.log("loading localStorage config");
-  const newConfig = configLS.get();
-  if (newConfig === undefined) {
-    await reset();
-  } else {
-    await apply(newConfig);
-    saveFullConfigToLocalStorage(true);
+  try {
+    const newConfig = configLS.get();
+    if (newConfig === undefined) {
+      await reset();
+    } else {
+      await apply(newConfig);
+      saveFullConfigToLocalStorage(true);
+    }
+  } catch (e) {
+    console.error("Failed to load config from localStorage, using defaults:", e);
+    try {
+      await apply(getDefaultConfig());
+    } catch (e2) {
+      console.error("Failed to apply default config:", e2);
+    }
+  } finally {
+    loadDone();
   }
-  loadDone();
 }
 
 export function getConfigChanges(): Partial<Config> {

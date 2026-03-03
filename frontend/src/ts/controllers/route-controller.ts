@@ -160,10 +160,10 @@ window.addEventListener("popstate", () => {
 // this code runs, so guard against both cases.
 function setupRouterLinks(): void {
   document.body.addEventListener("click", (e) => {
-    const target = e?.target as HTMLLinkElement;
-    if (target.matches("[router-link]") && target?.href) {
+    const anchor = (e.target as Element).closest<HTMLAnchorElement>("[router-link]");
+    if (anchor?.href) {
       e.preventDefault();
-      void navigate(target.href);
+      void navigate(anchor.href);
     }
   });
 }

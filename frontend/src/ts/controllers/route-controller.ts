@@ -2,10 +2,25 @@
 import * as TestUI from "../test/test-ui";
 import * as PageTransition from "../states/page-transition";
 import * as TestState from "../test/test-state";
-import * as Notifications from "../elements/notifications";
 import { LoadingOptions } from "../pages/page";
 
-//source: https://www.youtube.com/watch?v=OstALBk-jTc
+
+// Vite base path e.g. "/RapidKey/" in production, "/" in dev
+const base = import.meta.env.BASE_URL;
+
+/** Strip the base prefix from location.pathname so routes match "/", "/about" etc. */
+function stripBase(pathname: string): string {
+  const b = base.endsWith("/") ? base.slice(0, -1) : base;
+  if (b === "" || !pathname.startsWith(b)) return pathname || "/";
+  return pathname.slice(b.length) || "/";
+}
+
+/** Convert an internal route path ("/about") to its base-prefixed form ("/RapidKey/about"). */
+function withBase(path: string): string {
+  const b = base.endsWith("/") ? base.slice(0, -1) : base;
+  if (path === "/") return base;
+  return b + path;
+}
 
 type NavigateOptions = {
   force?: boolean;
@@ -90,27 +105,37 @@ export async function navigate(
     return;
   }
 
-  url = url.replace(/\/$/, "");
-  if (url === "") url = "/";
+  // For absolute URLs (from [router-link] clicks), use as-is.
+  // For internal paths like "/about", prepend the Vite base.
+  let pushUrl: string;
+  if (url.startsWith("http") || url.startsWith("//")) {
+    pushUrl = url;
+  } else {
+    const stripped = stripBase(url.replace(/\/$/, "") || "/");
+    pushUrl = withBase(stripped);
+  }
 
   const currentUrl = new URL(window.location.href);
-  const targetUrl = new URL(url, window.location.origin);
+  const targetUrl = new URL(pushUrl, window.location.origin);
 
   if (
     currentUrl.pathname + currentUrl.search + currentUrl.hash !==
     targetUrl.pathname + targetUrl.search + targetUrl.hash
   ) {
-    history.pushState(null, "", url);
+    history.pushState(null, "", pushUrl);
   }
 
   await router(options);
 }
 
 async function router(options = {} as NavigateOptions): Promise<void> {
+  // Strip the Vite base prefix before matching routes
+  const relativePath = stripBase(location.pathname);
+
   const matches = routes.map((r) => {
     return {
       route: r,
-      result: location.pathname.match(pathToRegex(r.path)),
+      result: relativePath.match(pathToRegex(r.path)),
     };
   });
 
@@ -131,7 +156,9 @@ window.addEventListener("popstate", () => {
   void router();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+// Modules are deferred — DOMContentLoaded may have already fired by the time
+// this code runs, so guard against both cases.
+function setupRouterLinks(): void {
   document.body.addEventListener("click", (e) => {
     const target = e?.target as HTMLLinkElement;
     if (target.matches("[router-link]") && target?.href) {
@@ -139,4 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
       void navigate(target.href);
     }
   });
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupRouterLinks);
+} else {
+  setupRouterLinks();
+}
+
+// Trigger the initial page render on first load.
+void router();

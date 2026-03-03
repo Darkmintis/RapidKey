@@ -329,7 +329,12 @@ export function restart(options = {} as RestartOptions): void {
     animationTime,
     async () => { try {
       $("#result").addClass("hidden");
-      $("#typingTest").css("opacity", 0).removeClass("hidden");
+      // Only hide typingTest during init when we will animate it back in
+      if (animationTime > 0) {
+        $("#typingTest").css("opacity", 0).removeClass("hidden");
+      } else {
+        $("#typingTest").removeClass("hidden");
+      }
       $("#wordsInput").css({ left: 0 }).val(" ");
 
       if (Config.language.startsWith("korean")) {

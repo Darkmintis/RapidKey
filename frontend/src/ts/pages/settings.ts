@@ -17,14 +17,12 @@ import * as Skeleton from "../utils/skeleton";
 import * as CustomBackgroundFilter from "../elements/custom-background-filter";
 import {
   ThemeName,
-  CustomLayoutFluid,
   ConfigKeySchema,
   ConfigKey,
 } from "@rapidkey/schemas/configs";
 import { LayoutsList } from "../constants/layouts";
 import { DataArrayPartial, Optgroup, OptionOptional } from "slim-select/store";
 import { Theme, ThemesList } from "../constants/themes";
-import { areSortedArraysEqual, areUnsortedArraysEqual } from "../utils/arrays";
 import { LayoutName } from "@rapidkey/schemas/layouts";
 import { LanguageGroupNames, LanguageGroups } from "../constants/languages";
 import { Language } from "@rapidkey/schemas/languages";
@@ -38,9 +36,6 @@ import * as CustomFontPicker from "../elements/settings/custom-font-picker";
 let settingsInitialized = false;
 
 type SettingsGroups = Partial<{ [K in ConfigKey]: SettingsGroup<K> }>;
-let customLayoutFluidSelect: SlimSelect | undefined;
-let customPolyglotSelect: SlimSelect | undefined;
-
 export const groups: SettingsGroups = {};
 
 const HighlightSchema = ConfigKeySchema.or(
@@ -558,42 +553,6 @@ async function fillSettingsPage(): Promise<void> {
     fontsEl.innerHTML = fontsElHTML;
   }
 
-  customLayoutFluidSelect = new SlimSelect({
-    select:
-      ".pageSettings .section[data-config-name='customLayoutfluid'] select",
-    settings: { keepOrder: true, minSelected: 2 },
-    events: {
-      afterChange: (newVal): void => {
-        const customLayoutfluid = newVal.map(
-          (it) => it.value
-        ) as CustomLayoutFluid;
-        //checking equal with order, because customLayoutfluid is ordered
-        if (
-          !areSortedArraysEqual(customLayoutfluid, Config.customLayoutfluid)
-        ) {
-          void UpdateConfig.setCustomLayoutfluid(customLayoutfluid);
-        }
-      },
-    },
-  });
-
-  customPolyglotSelect = new SlimSelect({
-    select: ".pageSettings .section[data-config-name='customPolyglot'] select",
-    settings: { minSelected: 2 },
-    data: getLanguageDropdownData((language) =>
-      Config.customPolyglot.includes(language)
-    ),
-    events: {
-      afterChange: (newVal): void => {
-        const customPolyglot = newVal.map((it) => it.value) as Language[];
-        //checking equal without order, because customPolyglot is not ordered
-        if (!areUnsortedArraysEqual(customPolyglot, Config.customPolyglot)) {
-          void UpdateConfig.setCustomPolyglot(customPolyglot);
-        }
-      },
-    },
-  });
-
   handleConfigInput({
     input: document.querySelector(
       ".pageSettings .section[data-config-name='minWpm'] input"
@@ -836,29 +795,8 @@ export async function update(
     tip: You can also change all these settings quickly using the
     command line (<key>${commandKey}</key> or <key>${modifierKey}</key> + <key>shift</key> + <key>p</key>)`);
 
-  if (
-    customLayoutFluidSelect !== undefined &&
-    //checking equal with order, because customLayoutFluid is ordered
-    !areSortedArraysEqual(
-      customLayoutFluidSelect.getSelected(),
-      Config.customLayoutfluid
-    )
-  ) {
-    //replace the data because the data is ordered. do not use setSelected
-    customLayoutFluidSelect.setData(getLayoutfluidDropdownData());
-  }
-
-  if (
-    customPolyglotSelect !== undefined &&
-    //checking equal without order, because customPolyglot is not ordered
-    !areUnsortedArraysEqual(
-      customPolyglotSelect.getSelected(),
-      Config.customPolyglot
-    )
-  ) {
-    customPolyglotSelect.setSelected(Config.customPolyglot);
-  }
 }
+
 function toggleSettingsGroup(groupName: string): void {
   //The highlight is repeated/broken when toggling the group
   handleHighlightSection(undefined);
@@ -1001,18 +939,6 @@ function getLanguageDropdownData(
         })),
       } as Optgroup)
   );
-}
-
-function getLayoutfluidDropdownData(): DataArrayPartial {
-  const customLayoutfluidActive = Config.customLayoutfluid;
-  return [
-    ...customLayoutfluidActive,
-    ...LayoutsList.filter((it) => !customLayoutfluidActive.includes(it)),
-  ].map((layout) => ({
-    text: layout.replace(/_/g, " "),
-    value: layout,
-    selected: customLayoutfluidActive.includes(layout),
-  }));
 }
 
 function getThemeDropdownData(

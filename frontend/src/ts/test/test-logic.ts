@@ -322,12 +322,9 @@ export function restart(options = {} as RestartOptions): void {
   }
   TestState.setResultVisible(false);
   TestState.setTestRestarting(true);
-  el.stop(true, true).animate(
-    {
-      opacity: 0,
-    },
-    animationTime,
-    async () => { try {
+
+  const doRestart = async (): Promise<void> => {
+    try {
       $("#result").addClass("hidden");
       // Only hide typingTest during init when we will animate it back in
       if (animationTime > 0) {
@@ -403,7 +400,6 @@ export function restart(options = {} as RestartOptions): void {
       ManualRestart.reset();
       TestState.setTestRestarting(false);
 
-      console.log("restart: init succeeded, showing #typingTest");
       $("#typingTest").removeClass("hidden").css("opacity", 1);
       if (animationTime > 0) {
         $("#typingTest")
@@ -417,8 +413,13 @@ export function restart(options = {} as RestartOptions): void {
       // Always restore typing test visibility on unexpected error
       $("#typingTest").css("opacity", 1).removeClass("hidden");
     }
-    }
-  );
+  };
+
+  if (animationTime > 0) {
+    el.stop(true, true).animate({ opacity: 0 }, animationTime, () => void doRestart());
+  } else {
+    void doRestart();
+  }
 
   ResultWordHighlight.destroy();
 }

@@ -387,8 +387,8 @@ export function restart(options = {} as RestartOptions): void {
         void ModesNotice.update();
       }
 
-      const isWordsFocused = $("#wordsInput").is(":focus");
-      if (isWordsFocused) OutOfFocus.hide();
+      // Always clear blurred state - beforeHide triggers focusout which starts a 1-sec blur timer
+      OutOfFocus.hide();
       TestUI.focusWords(true);
 
       // Reset state immediately — never block navigation waiting on animation

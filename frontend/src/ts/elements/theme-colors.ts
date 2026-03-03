@@ -1,7 +1,7 @@
 let colors = {
   bg: "#323437",
-  main: "#e2b714",
-  caret: "#e2b714",
+  main: "#ff3636",
+  caret: "#ff3636",
   sub: "#646669",
   subAlt: "#2c2e31",
   text: "#d1d0c5",

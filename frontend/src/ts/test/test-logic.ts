@@ -327,7 +327,7 @@ export function restart(options = {} as RestartOptions): void {
       opacity: 0,
     },
     animationTime,
-    async () => {
+    async () => { try {
       $("#result").addClass("hidden");
       $("#typingTest").css("opacity", 0).removeClass("hidden");
       $("#wordsInput").css({ left: 0 }).val(" ");
@@ -366,6 +366,8 @@ export function restart(options = {} as RestartOptions): void {
 
       if (!initResult) {
         TestState.setTestRestarting(false);
+        // Always restore typing test visibility even on init failure
+        $("#typingTest").css("opacity", 1).removeClass("hidden");
         return;
       }
 
@@ -406,6 +408,12 @@ export function restart(options = {} as RestartOptions): void {
             TestState.setTestRestarting(false);
           }
         );
+    } catch (e) {
+      console.error("Test restart failed:", e);
+      TestState.setTestRestarting(false);
+      // Always restore typing test visibility on unexpected error
+      $("#typingTest").css("opacity", 1).removeClass("hidden");
+    }
     }
   );
 

@@ -1,11 +1,6 @@
 import * as Notifications from "./elements/notifications";
 import { ZodSchema, z } from "zod";
 
-// function isConfigKeyValid(name: string): boolean {
-//   if (name === null || name === undefined || name === "") return false;
-//   if (name.length > 30) return false;
-//   return /^[0-9a-zA-Z_.\-#+]+$/.test(name);
-// }
 
 export function invalid(
   key: string,

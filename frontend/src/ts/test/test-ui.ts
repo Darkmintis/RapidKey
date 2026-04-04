@@ -197,7 +197,10 @@ export function updateActiveElement(
   }
   const newActiveWord = getActiveWordElement();
   if (newActiveWord === null) {
-    throw new Error("activeWord is null - can't update active element");
+    // During fast page/init transitions the words list can be momentarily empty.
+    // Treat this as a transient state instead of crashing the whole restart flow.
+    updateWordsInputPosition();
+    return;
   }
 
   newActiveWord.classList.add("active");
@@ -474,7 +477,12 @@ export function showWords(): void {
     for (let i = 0; i < TestWords.words.length; i++) {
       wordsHTML += buildWordHTML(TestWords.words.get(i), i);
     }
-    words.html(wordsHTML);
+    if (wordsHTML.length > 0) {
+      words.html(wordsHTML);
+    } else {
+      words.empty();
+      appendEmptyWordElement(0);
+    }
   }
 
   updateActiveElement(undefined, true);

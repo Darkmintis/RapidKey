@@ -24,7 +24,7 @@ RapidKey is a **desktop typing speed test** with a single goal: open it and star
 - ⚡ **Zero friction** — No login. No account. Just type.
 - 🖥️ **Desktop only** — Optimized for keyboard + monitor, no mobile clutter
 - 💾 **100% local** — All results, settings, and history saved in your browser (localStorage)
-- 🚀 **Fast** — Static site deployed on Vercel, loads in <1s
+- 🚀 **Fast** — Static site deployed on Github Page
 - 🎨 **12 curated themes** — Serika Dark (red), Dracula, Nord, Monokai, and more
 - 🌍 **7 languages** — English, Spanish, French, German, Portuguese, Chinese, Japanese
 - **$0 infra cost** — No backend, no database, no cloud bills

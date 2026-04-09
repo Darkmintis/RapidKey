@@ -21,8 +21,23 @@ import * as Loader from "../elements/loader";
 import { LanguageObject } from "@rapidkey/schemas/languages";
 
 // Funbox stubs — funbox removed
-type FunboxStub = { name: string; functions: any; properties?: string[] };
-type LangProps = { noLazyMode?: boolean; additionalAccents?: string[]; ligatures?: boolean };
+type PullSectionResult = { words: string[] } | false | undefined;
+type FunboxFunctions = {
+  punctuateWord?: (word: string) => string;
+  getWordsFrequencyMode?: () => FunboxWordsFrequency | undefined;
+  pullSection?: (language: string) => Promise<PullSectionResult> | PullSectionResult;
+  getWord?: (wordset: Wordset | undefined, wordIndex: number) => string;
+  alterText?: (word: string, wordIndex: number, wordsBound: number) => string;
+  withWords?:
+    | ((wordList: string[]) => Promise<Wordset | PolyglotWordset>)
+    | ((wordList: string[]) => Wordset | PolyglotWordset);
+};
+type FunboxStub = { name: string; functions: FunboxFunctions; properties?: string[] };
+type LangProps = {
+  noLazyMode?: boolean;
+  additionalAccents?: string[];
+  ligatures?: boolean;
+};
 function findSingleActiveFunboxWithFunction(_fn: string): FunboxStub | null { return null; }
 function getActiveFunboxes(): FunboxStub[] { return []; }
 function getActiveFunboxesWithFunction(_fn: string): FunboxStub[] { return []; }
@@ -54,7 +69,7 @@ export async function punctuateWord(
   const lastChar = Strings.getLastChar(previousWord);
 
   const funbox = findSingleActiveFunboxWithFunction("punctuateWord");
-  if (funbox) {
+  if (funbox?.functions.punctuateWord) {
     return funbox.functions.punctuateWord(word);
   }
   if (
@@ -320,18 +335,18 @@ async function applyEnglishPunctuationToWord(word: string): Promise<string> {
 
 function getFunboxWordsFrequency(): FunboxWordsFrequency | undefined {
   const funbox = findSingleActiveFunboxWithFunction("getWordsFrequencyMode");
-  if (funbox) {
+  if (funbox?.functions.getWordsFrequencyMode) {
     return funbox.functions.getWordsFrequencyMode();
   }
   return undefined;
 }
 
 async function getFunboxSection(): Promise<string[]> {
-  const ret = [];
+  const ret: string[] = [];
 
   const funbox = findSingleActiveFunboxWithFunction("pullSection");
 
-  if (funbox) {
+  if (funbox?.functions.pullSection) {
     const section = await funbox.functions.pullSection(Config.language);
 
     if (section === false || section === undefined) {
@@ -356,7 +371,7 @@ function getFunboxWord(
 ): string {
   const funbox = findSingleActiveFunboxWithFunction("getWord");
 
-  if (funbox) {
+  if (funbox?.functions.getWord) {
     word = funbox.functions.getWord(wordset, wordIndex);
   }
   return word;
@@ -368,7 +383,9 @@ function applyFunboxesToWord(
   wordsBound: number
 ): string {
   for (const fb of getActiveFunboxesWithFunction("alterText")) {
-    word = fb.functions.alterText(word, wordIndex, wordsBound);
+    if (fb.functions.alterText) {
+      word = fb.functions.alterText(word, wordIndex, wordsBound);
+    }
   }
   return word;
 }
@@ -394,9 +411,10 @@ function applyLazyModeToWord(word: string, language: LanguageObject): string {
   // polyglot mode, use the word's actual language
   if (currentWordset && currentWordset instanceof PolyglotWordset) {
     const langName = currentWordset.wordsWithLanguage.get(word);
-    const langProps = langName
-      ? currentWordset.languageProperties.get(langName)
-      : undefined;
+    const langProps =
+      langName !== undefined
+        ? currentWordset.languageProperties.get(langName)
+        : undefined;
     const allowLazyMode =
       (langProps && !langProps.noLazyMode) || Config.mode === "custom";
     if (Config.lazyMode && allowLazyMode && langProps) {
@@ -659,7 +677,7 @@ export async function generateWords(
   }
 
   const funbox = findSingleActiveFunboxWithFunction("withWords");
-  if (funbox) {
+  if (funbox?.functions.withWords) {
     const result = await funbox.functions.withWords(wordList);
     // PolyglotWordset if polyglot otherwise Wordset
     if (result instanceof PolyglotWordset) {
